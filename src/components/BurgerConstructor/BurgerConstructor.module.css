@@ -1,7 +1,7 @@
 .orderConfirmation {
   display: flex;
   flex-direction: row;
-  gap: 50px;
+  gap: 56px;
   justify-content: flex-end;
   align-items: center;
 }

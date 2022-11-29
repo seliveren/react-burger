@@ -89,7 +89,7 @@ const BurgerIngredients = () => {
       <Categories/>
       <div className={`mt-10 ${BurgerIngredientsStyles.scrollbar}`}>
         <h2 className={"text text_type_main-medium pt-0 pl-0 pr-0 pb-6 m-0"}>Булки</h2>
-        <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
+        <div className={`pb-6 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
           <Buns data={data}/>
         </div>
         <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Соусы</h2>

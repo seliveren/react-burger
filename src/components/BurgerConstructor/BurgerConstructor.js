@@ -26,7 +26,7 @@ const Card = ({ingredient, className}) => {
 
 const BunTop = ({ingredient, className}) => {
   return (
-    <div className={`ml-8 ${BurgerConstructorStyles.bunItem}`}>
+    <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <ConstructorElement
         type="top"
         isLocked={true}
@@ -41,7 +41,7 @@ const BunTop = ({ingredient, className}) => {
 
 const BunBottom = ({ingredient, className}) => {
   return (
-    <div className={`ml-8 ${BurgerConstructorStyles.bunItem}`}>
+    <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <ConstructorElement
         type="bottom"
         isLocked={true}
