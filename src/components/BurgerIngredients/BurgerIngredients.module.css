@@ -1,0 +1,56 @@
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 40px;
+}
+
+.scrollbar {
+  max-height: 707px;
+  max-width: 600px;
+  overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+  background-color: #2F2F37;
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  height: 492px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  max-width: 256px;
+  width: 100%;
+}
+
+.ingredientName {
+  max-width: 253px;
+  width: 100%;
+  text-align: center;
+}
+
+
+

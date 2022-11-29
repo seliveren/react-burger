@@ -1,0 +1,86 @@
+.priceTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9.5px;
+}
+
+.orderConfirmation {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.burgerStructure {
+  height: 464px;
+  width: 568px;
+}
+
+.section {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scrollbar {
+  max-height: 664px;
+  overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+  background-color: #2F2F37;
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  height: 292px;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1C1C21;
+  min-height: 80px;
+  max-width: 538px;
+  width: 100%;
+  border-radius: 40px;
+  box-sizing: border-box;
+}
+
+.image {
+  width: 80px;
+  height: 40px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8.5px;
+}
+
+.ingredientName {
+  max-width: 229px;
+  width: 100%;
+}
+
+.bunItem {
+  display: flex;
+}
+
+.topBun {
+  composes: card;
+  border-top-left-radius: 88px;
+  border-top-right-radius: 88px;
+}
+
+.bottomBun {
+  composes: card;
+  border-bottom-left-radius: 88px;
+  border-bottom-right-radius: 88px;
+}
+

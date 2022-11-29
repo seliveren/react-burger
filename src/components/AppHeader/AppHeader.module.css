@@ -1,0 +1,25 @@
+.ul {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  justify-content: center;
+  align-items: center;
+  background-color: #1C1C21;
+  gap: 45px;
+}
+
+.li {
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+}
+
+.link {
+  text-decoration: none;
+  color: #8585AD;
+}
+
+.link_active {
+  color: #FFF;
+}
+

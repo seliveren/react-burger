@@ -1,0 +1,17 @@
+.heading {
+  grid-row: 1/2;
+  grid-column: 1/2;
+}
+
+.section {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(min-content, max-content));
+  grid-template-columns: repeat(2, minmax(min-content, max-content));
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 38px;
+}
