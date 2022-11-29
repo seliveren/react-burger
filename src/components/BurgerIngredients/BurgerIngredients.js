@@ -41,7 +41,7 @@ const Card = ({ingredient, className = BurgerIngredientsStyles.card}) => {
   return (
     <div className={className}>
       {quantity !== 0 ? <Counter count={quantity} size="default"/> : null}
-      <img src={ingredient.image}/>
+      <img src={ingredient.image} alt="Изображение ингридиента"/>
       <div className={BurgerIngredientsStyles.priceTag}>
         <span className="text text_type_digits-default">{ingredient.price}</span>
         <CurrencyIcon type={"primary"}/>

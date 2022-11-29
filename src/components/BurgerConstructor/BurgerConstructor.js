@@ -10,7 +10,7 @@ const Card = ({ingredient, className}) => {
     <div className={`mb-4 ${BurgerConstructorStyles.item}`}>
       <DragIcon type="primary"/>
       <div className={className}>
-        <img src={ingredient.image} className={BurgerConstructorStyles.image}/>
+        <img src={ingredient.image} alt="Изображение ингредиента" className={BurgerConstructorStyles.image}/>
         <h3
           className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name}</h3>
         <div className={BurgerConstructorStyles.priceTag}>
@@ -27,7 +27,7 @@ const BunTop = ({ingredient, className}) => {
   return (
     <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <div className={className}>
-        <img src={ingredient.image} className={BurgerConstructorStyles.image}/>
+        <img src={ingredient.image} alt="Изображение верхней булочки" className={BurgerConstructorStyles.image}/>
         <h3
           className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name} (верх)</h3>
         <div className={BurgerConstructorStyles.priceTag}>
@@ -44,7 +44,7 @@ const BunBottom = ({ingredient, className}) => {
   return (
     <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <div className={className}>
-        <img src={ingredient.image} className={BurgerConstructorStyles.image}/>
+        <img src={ingredient.image} alt="Изображение нижней булочки" className={BurgerConstructorStyles.image}/>
         <h3
           className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name} (низ)</h3>
         <div className={BurgerConstructorStyles.priceTag}>
