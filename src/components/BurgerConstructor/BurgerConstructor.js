@@ -1,113 +1,106 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Button, CurrencyIcon, DeleteIcon, DragIcon, LockIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Button,
+  CurrencyIcon,
+  ConstructorElement,
+  DragIcon
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerConstructorStyles from "./BurgerConstructor.module.css";
-import data from "../App/utils/data.js";
-import {ingredientsPropTypes} from "../BurgerIngredients/BurgerIngredients";
+import data from "../../utils/data.js";
+import ingredientType from "../../utils/types.js";
 
 const Card = ({ingredient, className}) => {
   return (
-    <div className={`mb-4 ${BurgerConstructorStyles.item}`}>
+    <div className={BurgerConstructorStyles.item}>
       <DragIcon type="primary"/>
-      <div className={className}>
-        <img src={ingredient.image} alt="Изображение ингредиента" className={BurgerConstructorStyles.image}/>
-        <h3
-          className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name}</h3>
-        <div className={BurgerConstructorStyles.priceTag}>
-          <span className="text text_type_digits-default">{ingredient.price}</span>
-          <CurrencyIcon type={"primary"}/>
-        </div>
-        <DeleteIcon type="primary"/>
-      </div>
+      <ConstructorElement
+        text={ingredient.name}
+        price={ingredient.price}
+        thumbnail={ingredient.image}
+        classname={className}
+      />
     </div>
   );
 };
 
 const BunTop = ({ingredient, className}) => {
   return (
-    <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
-      <div className={className}>
-        <img src={ingredient.image} alt="Изображение верхней булочки" className={BurgerConstructorStyles.image}/>
-        <h3
-          className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name} (верх)</h3>
-        <div className={BurgerConstructorStyles.priceTag}>
-          <span className="text text_type_digits-default">{ingredient.price}</span>
-          <CurrencyIcon type={"primary"}/>
-        </div>
-        <LockIcon type="secondary"/>
-      </div>
+    <div className={`ml-8 ${BurgerConstructorStyles.bunItem}`}>
+      <ConstructorElement
+        type="top"
+        isLocked={true}
+        text={`${ingredient.name} (верх)`}
+        price={ingredient.price}
+        thumbnail={ingredient.image}
+        classname={className}
+      />
     </div>
   );
 };
 
 const BunBottom = ({ingredient, className}) => {
   return (
-    <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
-      <div className={className}>
-        <img src={ingredient.image} alt="Изображение нижней булочки" className={BurgerConstructorStyles.image}/>
-        <h3
-          className={`text text_type_main-default pr-2 ${BurgerConstructorStyles.ingredientName}`}>{ingredient.name} (низ)</h3>
-        <div className={BurgerConstructorStyles.priceTag}>
-          <span className="text text_type_digits-default">{ingredient.price}</span>
-          <CurrencyIcon type={"primary"}/>
-        </div>
-        <LockIcon type="secondary"/>
-      </div>
+    <div className={`ml-8 ${BurgerConstructorStyles.bunItem}`}>
+      <ConstructorElement
+        type="bottom"
+        isLocked={true}
+        text={`${ingredient.name} (низ)`}
+        price={ingredient.price}
+        thumbnail={ingredient.image}
+        classname={className}
+      />
     </div>
   );
 };
 
 const Other = ({data}) => {
-  let Other = data.filter(mainIngredient => mainIngredient.type.includes('main'));
+  const Other = data.filter(mainIngredient => mainIngredient.type.includes('main'));
   return (
     <>
-      {Other.map((ingredient, index) => (
-        <Card ingredient={ingredient} key={index} className={`pt-4 pl-6 pb-4 pr-6 ${BurgerConstructorStyles.card}`}/>
+      {Other.map((ingredient) => (
+        <Card ingredient={ingredient} key={ingredient._id}/>
       ))}
     </>
   );
 };
 
 Other.propTypes = {
-  data: PropTypes.arrayOf(ingredientsPropTypes).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
 const BurgerTop = ({data}) => {
-  let bunTop = data.find(bun => bun.type === 'bun');
+  const bunTop = data.find(bun => bun.type === 'bun');
   return (
-    <>
-      <BunTop ingredient={bunTop} className={`pt-4 pl-7 pb-4 pr-7 mt-15 ${BurgerConstructorStyles.topBun}`}/>
-    </>
+    <BunTop ingredient={bunTop}/>
   );
 };
 
 BurgerTop.propTypes = {
-  data: PropTypes.arrayOf(ingredientsPropTypes).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
 const BurgerBottom = ({data}) => {
-  let bunBottom = data.find(bun => bun.type === 'bun');
+  const bunBottom = data.find(bun => bun.type === 'bun');
   return (
-    <>
-      <BunBottom ingredient={bunBottom} className={`pt-4 pl-7 pb-4 pr-7 ${BurgerConstructorStyles.bottomBun}`}/>
-    </>
+    <BunBottom ingredient={bunBottom}/>
   );
 };
 
 BurgerBottom.propTypes = {
-  data: PropTypes.arrayOf(ingredientsPropTypes).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
 const BurgerConstructor = () => {
   return (
-    <section className={BurgerConstructorStyles.section}>
+    <section className={`pt-15 ${BurgerConstructorStyles.section}`}>
       <BurgerTop data={data}/>
       <div className={`pr-4 ${BurgerConstructorStyles.burgerStructure} ${BurgerConstructorStyles.scrollbar}`}>
         <Other data={data}/>
       </div>
       <BurgerBottom data={data}/>
       <div className={`pt-6 pr-5 ${BurgerConstructorStyles.orderConfirmation}`}>
-        <div className={`text text_type_digits-medium ${BurgerConstructorStyles.priceTag}`}>
+        <div className={"text text_type_digits-medium"}>
           <span>610</span>
           <CurrencyIcon type={"primary"}/>
         </div>
