@@ -1,0 +1,48 @@
+.orderConfirmation {
+  display: flex;
+  flex-direction: row;
+  gap: 56px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.burgerStructure {
+  height: 464px;
+  width: 568px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scrollbar {
+  max-height: 664px;
+  overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+  background-color: #2F2F37;
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  height: 292px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8.5px;
+}
+
+.bunItem {
+  display: flex;
+}
+
