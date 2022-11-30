@@ -38,10 +38,10 @@ const Card = ({ingredient, className = BurgerIngredientsStyles.card}) => {
 };
 
 const Buns = ({data}) => {
-  const Buns = data.filter(bun => bun.type.includes('bun'));
+  const bunIngredients = data.filter(bun => bun.type.includes('bun'));
   return (
     <>
-      {Buns.map((ingredient) => (
+      {bunIngredients.map((ingredient) => (
         <Card ingredient={ingredient} key={ingredient._id}/>
       ))}
     </>
@@ -53,10 +53,10 @@ Buns.propTypes = {
 };
 
 const Sauces = ({data}) => {
-  const Sauces = data.filter(sauce => sauce.type.includes('sauce'));
+  const sauceIngredients = data.filter(sauce => sauce.type.includes('sauce'));
   return (
     <>
-      {Sauces.map((ingredient) => (
+      {sauceIngredients.map((ingredient) => (
         <Card ingredient={ingredient} key={ingredient._id}/>
       ))}
     </>
@@ -68,10 +68,10 @@ Sauces.propTypes = {
 };
 
 const Filling = ({data}) => {
-  const Filling = data.filter(filling => filling.type.includes('main'));
+  const fillingIngredients = data.filter(filling => filling.type.includes('main'));
   return (
     <>
-      {Filling.map((ingredient) => (
+      {fillingIngredients.map((ingredient) => (
         <Card ingredient={ingredient} key={ingredient._id}/>
       ))}
     </>
