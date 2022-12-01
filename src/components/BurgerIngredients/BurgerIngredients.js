@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Tab, CurrencyIcon, Counter} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientsStyles from "./BurgerIngredients.module.css";
-import data from "../../utils/data.js";
 import ingredientType from "../../utils/types.js";
 
 const Categories = () => {
@@ -82,7 +81,7 @@ Filling.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({data}) => {
   return (
     <section className={`pr-5 ${BurgerIngredientsStyles.section}`}>
       <h1 className={"text text_type_main-large pb-5 m-0"}>Соберите бургер</h1>

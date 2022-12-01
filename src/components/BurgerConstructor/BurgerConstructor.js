@@ -7,7 +7,6 @@ import {
   DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerConstructorStyles from "./BurgerConstructor.module.css";
-import data from "../../utils/data.js";
 import ingredientType from "../../utils/types.js";
 
 const Card = ({ingredient, className}) => {
@@ -70,7 +69,7 @@ Other.propTypes = {
 };
 
 const BurgerTop = ({data}) => {
-  const bunTop = data.find(bun => bun.type === 'bun');
+  const bunTop = data.find(bun => bun.type.includes('bun'));
   return (
     <BunTop ingredient={bunTop}/>
   );
@@ -81,7 +80,7 @@ BurgerTop.propTypes = {
 };
 
 const BurgerBottom = ({data}) => {
-  const bunBottom = data.find(bun => bun.type === 'bun');
+  const bunBottom = data.find(bun => bun.type.includes('bun'));
   return (
     <BunBottom ingredient={bunBottom}/>
   );
@@ -91,7 +90,8 @@ BurgerBottom.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
-const BurgerConstructor = () => {
+const BurgerConstructor = ({data}) => {
+
   return (
     <section className={`pt-15 ${BurgerConstructorStyles.section}`}>
       <BurgerTop data={data}/>
