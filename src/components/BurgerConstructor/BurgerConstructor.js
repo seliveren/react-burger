@@ -7,7 +7,7 @@ import {
   DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerConstructorStyles from "./BurgerConstructor.module.css";
-import ingredientType from "../../utils/types.js";
+import {ingredientType} from "../../utils/types.js";
 
 const Card = ({ingredient, className}) => {
   return (
@@ -90,7 +90,8 @@ BurgerBottom.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired
 };
 
-const BurgerConstructor = ({data}) => {
+const BurgerConstructor = ({data, onClick}
+) => {
 
   return (
     <section className={`pt-15 ${BurgerConstructorStyles.section}`}>
@@ -104,7 +105,7 @@ const BurgerConstructor = ({data}) => {
           <span>610</span>
           <CurrencyIcon type={"primary"}/>
         </div>
-        <Button htmlType="button" type="primary" size="large">
+        <Button htmlType="button" type="primary" size="large" onClick={onClick}>
           Оформить заказ
         </Button>
       </div>

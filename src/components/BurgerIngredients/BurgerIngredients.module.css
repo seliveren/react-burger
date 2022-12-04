@@ -50,6 +50,10 @@
   width: 100%;
 }
 
+.card:hover {
+  cursor: pointer;
+}
+
 .ingredientName {
   max-width: 253px;
   width: 100%;

@@ -15,4 +15,5 @@ const ingredientType = PropTypes.shape({
   __v: PropTypes.number.isRequired
 });
 
-export default ingredientType;
+export { ingredientType };
+
