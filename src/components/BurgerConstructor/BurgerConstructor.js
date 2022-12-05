@@ -9,7 +9,7 @@ import {
 import BurgerConstructorStyles from "./BurgerConstructor.module.css";
 import {ingredientType} from "../../utils/types.js";
 
-const Card = ({ingredient, className}) => {
+const Card = ({ingredient}) => {
   return (
     <div className={BurgerConstructorStyles.item}>
       <DragIcon type="primary"/>
@@ -17,13 +17,16 @@ const Card = ({ingredient, className}) => {
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        classname={className}
       />
     </div>
   );
 };
 
-const BunTop = ({ingredient, className}) => {
+Card.propTypes = {
+  ingredient: PropTypes.object.isRequired
+};
+
+const BunTop = ({ingredient}) => {
   return (
     <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <ConstructorElement
@@ -32,13 +35,16 @@ const BunTop = ({ingredient, className}) => {
         text={`${ingredient.name} (верх)`}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        classname={className}
       />
     </div>
   );
 };
 
-const BunBottom = ({ingredient, className}) => {
+BunTop.propTypes = {
+  ingredient: PropTypes.object.isRequired
+};
+
+const BunBottom = ({ingredient}) => {
   return (
     <div className={`ml-7 ${BurgerConstructorStyles.bunItem}`}>
       <ConstructorElement
@@ -47,10 +53,13 @@ const BunBottom = ({ingredient, className}) => {
         text={`${ingredient.name} (низ)`}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        classname={className}
       />
     </div>
   );
+};
+
+BunBottom.propTypes = {
+  ingredient: PropTypes.object.isRequired
 };
 
 const Other = ({data}) => {
@@ -92,7 +101,6 @@ BurgerBottom.propTypes = {
 
 const BurgerConstructor = ({data, onClick}
 ) => {
-
   return (
     <section className={`pt-15 ${BurgerConstructorStyles.section}`}>
       <BurgerTop data={data}/>
@@ -112,5 +120,10 @@ const BurgerConstructor = ({data, onClick}
     </section>
   )
 }
+
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 export default BurgerConstructor;

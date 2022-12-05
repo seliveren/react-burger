@@ -21,7 +21,7 @@ const Categories = () => {
   )
 }
 
-const Card = ({ingredient, className = BurgerIngredientsStyles.card, onClick}) => {
+const Card = ({ingredient, className, onClick}) => {
   const quantity = 1;
   return (
     <div className={className} onClick={onClick} data-id={ingredient._id}>
@@ -36,19 +36,26 @@ const Card = ({ingredient, className = BurgerIngredientsStyles.card, onClick}) =
   );
 };
 
+Card.propTypes = {
+  ingredient: PropTypes.object.isRequired,
+  className: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
+};
+
 const Buns = ({data, onClick}) => {
   const bunIngredients = data.filter(bun => bun.type.includes('bun'));
   return (
     <>
       {bunIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id} onClick={onClick}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Buns.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 const Sauces = ({data, onClick}) => {
@@ -56,14 +63,15 @@ const Sauces = ({data, onClick}) => {
   return (
     <>
       {sauceIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id} onClick={onClick}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Sauces.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 const Filling = ({data, onClick}) => {
@@ -71,14 +79,15 @@ const Filling = ({data, onClick}) => {
   return (
     <>
       {fillingIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id} onClick={onClick}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Filling.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 const BurgerIngredients = ({data, onClick}) => {
@@ -103,5 +112,10 @@ const BurgerIngredients = ({data, onClick}) => {
     </section>
   );
 }
+
+BurgerIngredients.propTypes = {
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 export default BurgerIngredients;

@@ -3,22 +3,13 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   max-height: 718px;
   max-width: 720px;
   width: 100%;
   border-radius: 40px;
   margin: auto;
-  z-index: 2;
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 0.4s, opacity 0.4s ease-in-out;
-}
-
-.popupContainerOpened {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.4s ease-in-out;
+  z-index: 3;
 }
 
 .closeButton {

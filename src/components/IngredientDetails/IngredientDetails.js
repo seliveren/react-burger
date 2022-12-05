@@ -1,8 +1,8 @@
 import React from "react";
 import IngredientDetailsStyles from "./IngredientDetails.module.css";
+import PropTypes from "prop-types";
 
 const IngredientDetails = ({ingredient}) => {
-
   return (
     <div className={IngredientDetailsStyles.info}>
       <img src={ingredient.image} alt={ingredient.name} className={`pt-3 ${IngredientDetailsStyles.image}`}/>
@@ -28,5 +28,9 @@ const IngredientDetails = ({ingredient}) => {
     </div>
   );
 }
+
+IngredientDetails.propTypes = {
+  ingredient: PropTypes.object.isRequired
+};
 
 export default IngredientDetails;

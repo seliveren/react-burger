@@ -7,7 +7,6 @@ import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import {baseUrl} from "../../utils/constants";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 
 const App = () => {
@@ -20,13 +19,20 @@ const App = () => {
   const [isOpenInfo, setIsOpenInfo] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState();
 
-
   React.useEffect(() => {
     const getIngredientsData = async () => {
       setState({...state, isLoading: true, hasError: false});
-      const res = await fetch(`${baseUrl}`);
-      const data = await res.json();
-      setState({ingredientsData: data.data, isLoading: false, hasError: false});
+      const res = await fetch(`${baseUrl}`)
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+          return Promise.reject(`Ошибка ${res.status}`);
+        })
+        .catch((error) => {
+          setState({...state, hasError: true});
+        })
+      setState({ingredientsData: res.data, isLoading: false, hasError: false});
     }
     getIngredientsData();
   }, []);
@@ -37,40 +43,6 @@ const App = () => {
     setSelectedValue(state.ingredientsData.find(bun => bun._id === e.currentTarget.dataset.id));
     setIsOpenInfo(true)
   }
-
-
-  const escCloseInfo = (e) => {
-    if (e.key === "Escape") {
-      setIsOpenInfo(false);
-    }
-  }
-
-  const escCloseOrder = (e) => {
-    if (e.key === "Escape") {
-      setIsOpenOrder(false);
-    }
-  }
-
-  React.useEffect(() => {
-    document.addEventListener('keyup', escCloseInfo, false);
-    document.addEventListener('keyup', escCloseOrder, false);
-
-    return () => {
-      document.removeEventListener('keyup', escCloseInfo, false);
-      document.addEventListener('keyup', escCloseOrder, false);
-    };
-  }, [escCloseInfo, escCloseOrder]);
-
-  const handleCloseInfo = (e) => {
-    escCloseInfo(e);
-    setIsOpenInfo(false)
-  }
-
-  const handleCloseOrder = (e) => {
-    escCloseOrder(e);
-    setIsOpenOrder(false)
-  }
-
 
   return (
     <>
@@ -83,21 +55,24 @@ const App = () => {
         <>
           <AppHeader/>
           <main className={AppStyles.main}>
+
             <BurgerIngredients data={state.ingredientsData} onClick={(e) => {
               setModalData(e);
             }}/>
             <BurgerConstructor data={state.ingredientsData} onClick={() => setIsOpenOrder(true)}/>
 
-            <ModalOverlay open={isOpenOrder} onClose={(e) => handleCloseOrder(e)}/>
-            <Modal open={isOpenOrder} onClose={(e) => handleCloseOrder(e)}>
-              <OrderDetails/>
-            </Modal>
+            {isOpenOrder && (
+              <Modal onClose={() => setIsOpenOrder(false)} setOpenModal={setIsOpenOrder}>
+                <OrderDetails/>
+              </Modal>
+            )}
 
+            {isOpenInfo && (
+              <Modal onClose={() => setIsOpenInfo(false)} setOpenModal={setIsOpenInfo}>
+                <IngredientDetails ingredient={selectedValue}/>
+              </Modal>
+            )}
 
-            <ModalOverlay open={isOpenInfo} onClose={(e) => handleCloseInfo(e)}/>
-            <Modal open={isOpenInfo} header={'Детали ингредиента'} onClose={(e) => handleCloseInfo(e)}>
-              <IngredientDetails ingredient={selectedValue}/>
-            </Modal>
           </main>
         </>}
     </>
