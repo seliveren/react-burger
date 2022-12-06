@@ -7,11 +7,11 @@ import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 const modalRoot = document.getElementById('react-modules');
 
-const Modal = ({children, header, onClose, setOpenModal}) => {
+const Modal = ({children, header, onClose}) => {
 
   const escClose = (e) => {
     if (e.key === "Escape") {
-      setOpenModal(false);
+      onClose()
     }
   }
 
@@ -40,8 +40,7 @@ const Modal = ({children, header, onClose, setOpenModal}) => {
 Modal.propTypes = {
   children: PropTypes.object.isRequired,
   header: PropTypes.string,
-  onClose: PropTypes.func.isRequired,
-  setOpenModal: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default Modal;

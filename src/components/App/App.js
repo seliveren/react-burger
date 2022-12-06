@@ -20,19 +20,21 @@ const App = () => {
   const [selectedValue, setSelectedValue] = React.useState();
 
   React.useEffect(() => {
-    const getIngredientsData = async () => {
+    const getIngredientsData = () => {
       setState({...state, isLoading: true, hasError: false});
-      const res = await fetch(`${baseUrl}`)
+      fetch(`${baseUrl}`)
         .then(res => {
           if (res.ok) {
             return res.json();
           }
           return Promise.reject(`Ошибка ${res.status}`);
         })
+        .then((res) => {
+          setState({ingredientsData: res.data, isLoading: false, hasError: false});
+        })
         .catch((error) => {
           setState({...state, hasError: true});
         })
-      setState({ingredientsData: res.data, isLoading: false, hasError: false});
     }
     getIngredientsData();
   }, []);
@@ -62,13 +64,13 @@ const App = () => {
             <BurgerConstructor data={state.ingredientsData} onClick={() => setIsOpenOrder(true)}/>
 
             {isOpenOrder && (
-              <Modal onClose={() => setIsOpenOrder(false)} setOpenModal={setIsOpenOrder}>
+              <Modal onClose={() => setIsOpenOrder(false)}>
                 <OrderDetails/>
               </Modal>
             )}
 
             {isOpenInfo && (
-              <Modal onClose={() => setIsOpenInfo(false)} setOpenModal={setIsOpenInfo}>
+              <Modal onClose={() => setIsOpenInfo(false)} header={'Детали ингредиента'}>
                 <IngredientDetails ingredient={selectedValue}/>
               </Modal>
             )}
