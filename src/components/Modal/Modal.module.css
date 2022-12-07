@@ -1,0 +1,33 @@
+.popupContainer {
+  background-color: #1C1C21;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 718px;
+  max-width: 720px;
+  width: 100%;
+  border-radius: 40px;
+  margin: auto;
+  z-index: 3;
+}
+
+.closeButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: none;
+  z-index: 4;
+}
+
+.heading {
+  max-width: 580px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Tab, CurrencyIcon, Counter} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientsStyles from "./BurgerIngredients.module.css";
-import data from "../../utils/data.js";
-import ingredientType from "../../utils/types.js";
+import {ingredientType} from "../../utils/types.js";
 
 const Categories = () => {
   const [current, setCurrent] = React.useState('one');
@@ -22,10 +21,10 @@ const Categories = () => {
   )
 }
 
-const Card = ({ingredient, className = BurgerIngredientsStyles.card}) => {
+const Card = ({ingredient, className, onClick}) => {
   const quantity = 1;
   return (
-    <div className={className}>
+    <div className={className} onClick={onClick} data-id={ingredient._id}>
       {quantity !== 0 ? <Counter count={quantity} size="default"/> : null}
       <img src={ingredient.image} alt={ingredient.name}/>
       <div className={BurgerIngredientsStyles.priceTag}>
@@ -37,52 +36,61 @@ const Card = ({ingredient, className = BurgerIngredientsStyles.card}) => {
   );
 };
 
-const Buns = ({data}) => {
+Card.propTypes = {
+  ingredient: PropTypes.object.isRequired,
+  className: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
+};
+
+const Buns = ({data, onClick}) => {
   const bunIngredients = data.filter(bun => bun.type.includes('bun'));
   return (
     <>
       {bunIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Buns.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
-const Sauces = ({data}) => {
+const Sauces = ({data, onClick}) => {
   const sauceIngredients = data.filter(sauce => sauce.type.includes('sauce'));
   return (
     <>
       {sauceIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Sauces.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
-const Filling = ({data}) => {
+const Filling = ({data, onClick}) => {
   const fillingIngredients = data.filter(filling => filling.type.includes('main'));
   return (
     <>
       {fillingIngredients.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id}/>
+        <Card ingredient={ingredient} className={BurgerIngredientsStyles.card} key={ingredient._id} onClick={onClick}/>
       ))}
     </>
   );
 };
 
 Filling.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({data, onClick}) => {
   return (
     <section className={`pr-5 ${BurgerIngredientsStyles.section}`}>
       <h1 className={"text text_type_main-large pb-5 m-0"}>Соберите бургер</h1>
@@ -90,19 +98,24 @@ const BurgerIngredients = () => {
       <div className={`mt-10 ${BurgerIngredientsStyles.scrollbar}`}>
         <h2 className={"text text_type_main-medium pt-0 pl-0 pr-0 pb-6 m-0"}>Булки</h2>
         <div className={`pb-6 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Buns data={data}/>
+          <Buns data={data} onClick={onClick}/>
         </div>
         <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Соусы</h2>
         <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Sauces data={data}/>
+          <Sauces data={data} onClick={onClick}/>
         </div>
         <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Начинки</h2>
         <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Filling data={data}/>
+          <Filling data={data} onClick={onClick}/>
         </div>
       </div>
     </section>
   );
 }
+
+BurgerIngredients.propTypes = {
+  data: PropTypes.arrayOf(ingredientType).isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 export default BurgerIngredients;
