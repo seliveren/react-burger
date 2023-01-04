@@ -1,5 +1,5 @@
 import React from "react";
-import IngredientDetailsStyles from "./IngredientDetails.module.css";
+import IngredientDetailsStyles from "./ingredient-details.module.css";
 import PropTypes from "prop-types";
 
 const IngredientDetails = ({ingredient}) => {
