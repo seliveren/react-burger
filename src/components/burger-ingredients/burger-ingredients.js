@@ -6,23 +6,31 @@ import {ingredientType} from "../../utils/types.js";
 import {DataContext} from "../../services/burger-context";
 
 
-
 const Categories = ({refOne, refTwo, refThree}) => {
   const [current, setCurrent] = React.useState('one');
 
   const handleScroll = (ref) => {
-   ref.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
+    ref.scrollIntoView({behavior: 'smooth', block: 'nearest'});
   };
 
   return (
     <div className={BurgerIngredientsStyles.categories}>
-      <Tab value="one" active={current === 'one'} onClick={(e) => {setCurrent(e); handleScroll(refOne.current)}}>
+      <Tab value="one" active={current === 'one'} onClick={(e) => {
+        setCurrent(e);
+        handleScroll(refOne.current)
+      }}>
         Булки
       </Tab>
-      <Tab value="two" active={current === 'two'} onClick={(e) => {setCurrent(e); handleScroll(refTwo.current)}}>
+      <Tab value="two" active={current === 'two'} onClick={(e) => {
+        setCurrent(e);
+        handleScroll(refTwo.current)
+      }}>
         Соусы
       </Tab>
-      <Tab value="three" active={current === 'three'} onClick={(e) => {setCurrent(e); handleScroll(refThree.current)}}>
+      <Tab value="three" active={current === 'three'} onClick={(e) => {
+        setCurrent(e);
+        handleScroll(refThree.current)
+      }}>
         Начинки
       </Tab>
     </div>
@@ -51,7 +59,7 @@ Card.propTypes = {
 };
 
 const Buns = ({data, onClick}) => {
-  const bunIngredients = data.filter(bun => bun.type.includes('bun'));
+  const bunIngredients = React.useMemo(() => data.filter(bun => bun.type.includes('bun')), [data]);
   return (
     <>
       {bunIngredients.map((ingredient) => (
@@ -67,7 +75,7 @@ Buns.propTypes = {
 };
 
 const Sauces = ({data, onClick}) => {
-  const sauceIngredients = data.filter(sauce => sauce.type.includes('sauce'));
+  const sauceIngredients = React.useMemo(() => data.filter(sauce => sauce.type.includes('sauce')), [data]);
   return (
     <>
       {sauceIngredients.map((ingredient) => (
@@ -83,7 +91,7 @@ Sauces.propTypes = {
 };
 
 const Filling = ({data, onClick}) => {
-  const fillingIngredients = data.filter(filling => filling.type.includes('main'));
+  const fillingIngredients = React.useMemo(() => data.filter(filling => filling.type.includes('main')), [data]);
   return (
     <>
       {fillingIngredients.map((ingredient) => (

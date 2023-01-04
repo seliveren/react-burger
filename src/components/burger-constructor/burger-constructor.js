@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerConstructorStyles from "./burger-constructor.module.css";
 import {ingredientType} from "../../utils/types.js";
-import {DataContext, OrderContext} from "../../services/burger-context"
+import {DataContext} from "../../services/burger-context"
 import {baseUrl} from "../../utils/constants";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
+import {request} from "../../utils/server-interaction";
 
 
 const Card = ({ingredient}) => {
@@ -63,7 +64,7 @@ BunBottom.propTypes = {
 };
 
 const Other = ({data}) => {
-  const Other = data.filter(mainIngredient => mainIngredient.type.includes('main'));
+  const Other = React.useMemo(() => data.filter(mainIngredient => mainIngredient.type.includes('main')), [data]);
   return (
     <>
       {Other.map((ingredient) => (
@@ -78,7 +79,7 @@ Other.propTypes = {
 };
 
 const BurgerTop = ({data}) => {
-  const bunTop = data.find(bun => bun.type.includes('bun'));
+  const bunTop = React.useMemo(() =>data.find(bun => bun.type.includes('bun')), [data]);
   return (
     <BunTop ingredient={bunTop}/>
   );
@@ -89,7 +90,7 @@ BurgerTop.propTypes = {
 };
 
 const BurgerBottom = ({data}) => {
-  const bunBottom = data.find(bun => bun.type.includes('bun'));
+  const bunBottom = React.useMemo(() =>data.find(bun => bun.type.includes('bun')), [data]);
   return (
     <BunBottom ingredient={bunBottom}/>
   );
@@ -111,9 +112,9 @@ const BurgerConstructor = () => {
   });
 
 
-  const bun = data.ingredientsData.find(bun => bun.type.includes('bun'));
-  const main = data.ingredientsData.filter(mainIngredient => mainIngredient.type.includes('main'));
-  const mainSum = (Object.keys(main).reduce(
+  const bun = React.useMemo(() => data.ingredientsData.find(bun => bun.type.includes('bun')), [data.ingredientsData]);
+  const main = React.useMemo(() => data.ingredientsData.filter(mainIngredient => mainIngredient.type.includes('main')), [data.ingredientsData]);
+  const mainSum = React.useMemo(() => (Object.keys(main).reduce(
     function (previous, key) {
       previous.price += main[key].price;
       return previous;
@@ -122,33 +123,27 @@ const BurgerConstructor = () => {
     {
       price: 0
     }
-  )).price;
+  )).price, [main]);
   const bunSum = bun.price * 2;
 
 
-  const pickedIngredients = () => {
+  const pickedIngredients = React.useMemo(() => {
     let picked = [];
     main.map((el) => picked.push(el._id));
     picked.push(bun._id);
     return picked
-  }
+  }, [main, bun]);
 
   const placeOrder = () => {
-    fetch(`${baseUrl}/orders`, {
+    request(`${baseUrl}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        "ingredients": pickedIngredients()
+        "ingredients": pickedIngredients
       })
     })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
       .then((res) => {
         setOrder({orderNumber: res.order.number, isLoading: false, hasError: false});
       })
@@ -177,13 +172,11 @@ const BurgerConstructor = () => {
         </div>
       </section>
 
-      <OrderContext.Provider value={[order, setOrder]}>
-        {isOpenOrder && (
-          <Modal onClose={() => setIsOpenOrder(false)}>
-            <OrderDetails/>
-          </Modal>
-        )}
-      </OrderContext.Provider>
+      {isOpenOrder && (
+        <Modal onClose={() => setIsOpenOrder(false)}>
+          <OrderDetails orderNumber={order.orderNumber}/>
+        </Modal>
+      )}
     </>
   )
 }

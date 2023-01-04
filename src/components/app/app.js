@@ -7,6 +7,7 @@ import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import {baseUrl} from "../../utils/constants";
 import {DataContext} from "../../services/burger-context"
+import {request} from "../../utils/server-interaction";
 
 
 const App = () => {
@@ -26,13 +27,7 @@ const App = () => {
   React.useEffect(() => {
     const getIngredientsData = () => {
       setState({...state, isLoading: true, hasError: false});
-      fetch(`${baseUrl}/ingredients`)
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          }
-          return Promise.reject(`Ошибка ${res.status}`);
-        })
+      request(`${baseUrl}/ingredients`)
         .then((res) => {
           setState({ingredientsData: res.data, isLoading: false, hasError: false});
         })
@@ -45,7 +40,7 @@ const App = () => {
 
 
   const setModalData = (e) => {
-    setSelectedValue(state.ingredientsData.find(bun => bun._id === e.currentTarget.dataset.id));
+    setSelectedValue(state.ingredientsData.find(el => el._id === e.currentTarget.dataset.id));
     setIsOpenInfo(true)
   }
 
