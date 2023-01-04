@@ -1,28 +1,32 @@
 import React from "react";
-import AppHeader from "../AppHeader/AppHeader";
-import AppStyles from "./App.module.css";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import Modal from "../Modal/Modal";
-import OrderDetails from "../OrderDetails/OrderDetails";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import AppHeader from "../app-header/app-header";
+import AppStyles from "./app.module.css";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import BurgerConstructor from "../burger-constructor/burger-constructor";
+import Modal from "../modal/modal";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 import {baseUrl} from "../../utils/constants";
+import {DataContext} from "../../services/burger-context"
 
 
 const App = () => {
+
+  const firstRef = React.useRef(null);
+  const secondRef = React.useRef(null);
+  const thirdRef = React.useRef(null);
+
   const [state, setState] = React.useState({
     ingredientsData: [],
     isLoading: false,
     hasError: false
   })
-  const [isOpenOrder, setIsOpenOrder] = React.useState(false);
   const [isOpenInfo, setIsOpenInfo] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState();
 
   React.useEffect(() => {
     const getIngredientsData = () => {
       setState({...state, isLoading: true, hasError: false});
-      fetch(`${baseUrl}`)
+      fetch(`${baseUrl}/ingredients`)
         .then(res => {
           if (res.ok) {
             return res.json();
@@ -32,22 +36,22 @@ const App = () => {
         .then((res) => {
           setState({ingredientsData: res.data, isLoading: false, hasError: false});
         })
-        .catch((error) => {
+        .catch(() => {
           setState({...state, hasError: true});
         })
     }
     getIngredientsData();
   }, []);
 
-  const {ingredientsData, isLoading, hasError} = state;
 
   const setModalData = (e) => {
     setSelectedValue(state.ingredientsData.find(bun => bun._id === e.currentTarget.dataset.id));
     setIsOpenInfo(true)
   }
 
+
   return (
-    <>
+    <DataContext.Provider value={[state, setState]}>
       {state.isLoading &&
         <div className={AppStyles.loadingMessage}>Настройка связи с космосом...&#128125;</div>}
       {state.hasError && <div className={AppStyles.errorMessage}>Связь с космосом нарушена!&#128165;</div>}
@@ -58,16 +62,11 @@ const App = () => {
           <AppHeader/>
           <main className={AppStyles.main}>
 
-            <BurgerIngredients data={state.ingredientsData} onClick={(e) => {
+            <BurgerIngredients refOne={firstRef} refTwo={secondRef} refThree={thirdRef} onClick={(e) => {
               setModalData(e);
             }}/>
-            <BurgerConstructor data={state.ingredientsData} onClick={() => setIsOpenOrder(true)}/>
 
-            {isOpenOrder && (
-              <Modal onClose={() => setIsOpenOrder(false)}>
-                <OrderDetails/>
-              </Modal>
-            )}
+            <BurgerConstructor/>
 
             {isOpenInfo && (
               <Modal onClose={() => setIsOpenInfo(false)} header={'Детали ингредиента'}>
@@ -77,7 +76,7 @@ const App = () => {
 
           </main>
         </>}
-    </>
+    </DataContext.Provider>
   );
 }
 

@@ -1,25 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Tab, CurrencyIcon, Counter} from "@ya.praktikum/react-developer-burger-ui-components";
-import BurgerIngredientsStyles from "./BurgerIngredients.module.css";
+import BurgerIngredientsStyles from "./burger-ingredients.module.css";
 import {ingredientType} from "../../utils/types.js";
+import {DataContext} from "../../services/burger-context";
 
-const Categories = () => {
+
+
+const Categories = ({refOne, refTwo, refThree}) => {
   const [current, setCurrent] = React.useState('one');
+
+  const handleScroll = (ref) => {
+   ref.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
+  };
+
   return (
     <div className={BurgerIngredientsStyles.categories}>
-      <Tab value="one" active={current === 'one'} onClick={setCurrent}>
+      <Tab value="one" active={current === 'one'} onClick={(e) => {setCurrent(e); handleScroll(refOne.current)}}>
         Булки
       </Tab>
-      <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+      <Tab value="two" active={current === 'two'} onClick={(e) => {setCurrent(e); handleScroll(refTwo.current)}}>
         Соусы
       </Tab>
-      <Tab value="three" active={current === 'three'} onClick={setCurrent}>
+      <Tab value="three" active={current === 'three'} onClick={(e) => {setCurrent(e); handleScroll(refThree.current)}}>
         Начинки
       </Tab>
     </div>
   )
-}
+};
 
 const Card = ({ingredient, className, onClick}) => {
   const quantity = 1;
@@ -90,23 +98,26 @@ Filling.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const BurgerIngredients = ({data, onClick}) => {
+const BurgerIngredients = ({onClick, refOne, refTwo, refThree}) => {
+
+  const [data] = React.useContext(DataContext);
+
   return (
     <section className={`pr-5 ${BurgerIngredientsStyles.section}`}>
       <h1 className={"text text_type_main-large pb-5 m-0"}>Соберите бургер</h1>
-      <Categories/>
+      <Categories refOne={refOne} refTwo={refTwo} refThree={refThree}/>
       <div className={`mt-10 ${BurgerIngredientsStyles.scrollbar}`}>
-        <h2 className={"text text_type_main-medium pt-0 pl-0 pr-0 pb-6 m-0"}>Булки</h2>
+        <h2 ref={refOne} className={"text text_type_main-medium pt-0 pl-0 pr-0 pb-6 m-0"}>Булки</h2>
         <div className={`pb-6 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Buns data={data} onClick={onClick}/>
+          <Buns data={data.ingredientsData} onClick={onClick}/>
         </div>
         <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Соусы</h2>
-        <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Sauces data={data} onClick={onClick}/>
+        <div ref={refTwo} className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
+          <Sauces data={data.ingredientsData} onClick={onClick}/>
         </div>
-        <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Начинки</h2>
-        <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
-          <Filling data={data} onClick={onClick}/>
+        <h2 className={"text text_type_main-me dium pt-10 pl-0 pr-0 pb-6 m-0"}>Начинки</h2>
+        <div ref={refThree} className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
+          <Filling data={data.ingredientsData} onClick={onClick}/>
         </div>
       </div>
     </section>
@@ -114,8 +125,10 @@ const BurgerIngredients = ({data, onClick}) => {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  refOne: PropTypes.object.isRequired,
+  refTwo: PropTypes.object.isRequired,
+  refThree: PropTypes.object.isRequired,
 };
 
 export default BurgerIngredients;
