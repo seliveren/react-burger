@@ -3,21 +3,65 @@ import PropTypes from "prop-types";
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerConstructorStyles from "./burger-constructor.module.css";
 import {ingredientType} from "../../utils/types.js";
-import {DataContext} from "../../services/burger-context"
-import {baseUrl} from "../../utils/constants";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import {request} from "../../utils/server-interaction";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  addIngredient,
+  postOrder,
+  deleteIngredient,
+  decreaseCounter,
+  addBun,
+  changeOrder
+} from '../../services/actions/index';
+import {useDrop, useDrag} from "react-dnd";
 
 
-const Card = ({ingredient}) => {
+const Card = ({ingredient, index}) => {
+  const dispatch = useDispatch();
+  const handleDelete = (id, index) => {
+    dispatch(decreaseCounter(id));
+    dispatch(deleteIngredient(index));
+  }
+
+  const ref = React.useRef(null);
+
+  const [, drop] = useDrop({
+    accept: 'card',
+    drop(item) {
+      if (!ref.current) {
+        return
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) {
+        return
+      }
+      dispatch(changeOrder(dragIndex, hoverIndex));
+    }
+  });
+
+
+  const [{isDragging}, drag] = useDrag(() => ({
+    type: 'card',
+    item: {id: ingredient._id, index},
+    collect: (monitor) => {
+      return {
+        isDragging: monitor.isDragging()
+      };
+    },
+  }));
+
+  drag(drop(ref));
+
   return (
-    <div className={BurgerConstructorStyles.item}>
+    <div className={BurgerConstructorStyles.item} ref={ref} style={{opacity: isDragging ? 0 : 1}}>
       <DragIcon type="primary"/>
       <ConstructorElement
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
+        handleClose={() => handleDelete(ingredient._id, index)}
       />
     </div>
   );
@@ -63,12 +107,12 @@ BunBottom.propTypes = {
   ingredient: PropTypes.object.isRequired
 };
 
-const Other = ({data}) => {
-  const Other = React.useMemo(() => data.filter(mainIngredient => mainIngredient.type.includes('main')), [data]);
+const Other = ({data, handleDelete}) => {
+  const Other = React.useMemo(() => data.filter(mainIngredient => mainIngredient.type.includes('main') || mainIngredient.type.includes('sauce')), [data]);
   return (
     <>
-      {Other.map((ingredient) => (
-        <Card ingredient={ingredient} key={ingredient._id}/>
+      {Other.map((ingredient, index) => (
+        <Card ingredient={ingredient} key={index} index={index} handleDelete={handleDelete}/>
       ))}
     </>
   );
@@ -79,94 +123,89 @@ Other.propTypes = {
 };
 
 const BurgerTop = ({data}) => {
-  const bunTop = React.useMemo(() =>data.find(bun => bun.type.includes('bun')), [data]);
   return (
-    <BunTop ingredient={bunTop}/>
+    <BunTop ingredient={data}/>
   );
 };
 
 BurgerTop.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.object.isRequired
 };
 
 const BurgerBottom = ({data}) => {
-  const bunBottom = React.useMemo(() =>data.find(bun => bun.type.includes('bun')), [data]);
   return (
-    <BunBottom ingredient={bunBottom}/>
+    <BunBottom ingredient={data}/>
   );
 };
 
 BurgerBottom.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired
+  data: PropTypes.object.isRequired
 };
 
 
 const BurgerConstructor = () => {
 
-  const [data] = React.useContext(DataContext);
+  const data = useSelector(store => store.ingredients);
+  const dispatch = useDispatch();
   const [isOpenOrder, setIsOpenOrder] = React.useState(false);
-  const [order, setOrder] = React.useState({
-    orderNumber: 0,
-    isLoading: false,
-    hasError: false
-  });
 
+  const chosenIngredients = useSelector(store => store.ingredients.chosenIngredients);
+  const chosenBun = useSelector(store => store.ingredients.chosenBun);
 
-  const bun = React.useMemo(() => data.ingredientsData.find(bun => bun.type.includes('bun')), [data.ingredientsData]);
-  const main = React.useMemo(() => data.ingredientsData.filter(mainIngredient => mainIngredient.type.includes('main')), [data.ingredientsData]);
-  const mainSum = React.useMemo(() => (Object.keys(main).reduce(
+  const [{isOver}, drop] = useDrop(() => ({
+    accept: "mainIngredient",
+    drop: (item) => addMain(item.id),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver()
+    })
+  }))
+
+  const addMain = (id) => {
+    const main = data.ingredients.filter((ingredient) => id === ingredient._id);
+    main[0].type.includes('main') || main[0].type.includes('sauce') ? dispatch(addIngredient(id)) : dispatch(addBun(id));
+  };
+
+  const mainSum = React.useMemo(() => (Object.keys(chosenIngredients).reduce(
     function (previous, key) {
-      previous.price += main[key].price;
+      previous.price += chosenIngredients[key].price;
       return previous;
     }
     ,
     {
       price: 0
     }
-  )).price, [main]);
-  const bunSum = bun.price * 2;
+  )).price, [chosenIngredients]);
+  const bunSum = chosenBun.price * 2;
 
 
   const pickedIngredients = React.useMemo(() => {
     let picked = [];
-    main.map((el) => picked.push(el._id));
-    picked.push(bun._id);
+    chosenIngredients.map((el) => picked.push(el._id));
+    picked.push(chosenBun._id);
     return picked
-  }, [main, bun]);
+  }, [chosenIngredients, chosenBun]);
 
-  const placeOrder = () => {
-    request(`${baseUrl}/orders`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "ingredients": pickedIngredients
-      })
-    })
-      .then((res) => {
-        setOrder({orderNumber: res.order.number, isLoading: false, hasError: false});
-      })
-      .catch(() => {
-        setOrder({...order, hasError: true});
-      })
-    setIsOpenOrder(true);
-  }
+
+  const handleOrder = () => {
+    dispatch(postOrder(pickedIngredients));
+    setIsOpenOrder(true)
+  };
+
 
   return (
     <>
-      <section className={`pt-15 ${BurgerConstructorStyles.section}`}>
-        <BurgerTop data={data.ingredientsData}/>
+      <section ref={drop} className={`pt-15 ${BurgerConstructorStyles.section}`}>
+        <BurgerTop data={chosenBun}/>
         <div className={`pr-4 ${BurgerConstructorStyles.burgerStructure} ${BurgerConstructorStyles.scrollbar}`}>
-          <Other data={data.ingredientsData}/>
+          <Other data={chosenIngredients}/>
         </div>
-        <BurgerBottom data={data.ingredientsData}/>
+        <BurgerBottom data={chosenBun}/>
         <div className={`pt-6 pr-5 ${BurgerConstructorStyles.orderConfirmation}`}>
           <div className={"text text_type_digits-medium"}>
             <span>{mainSum + bunSum}</span>
             <CurrencyIcon type={"primary"}/>
           </div>
-          <Button htmlType="button" type="primary" size="large" onClick={placeOrder}>
+          <Button htmlType="button" type="primary" size="large" onClick={handleOrder}>
             Оформить заказ
           </Button>
         </div>
@@ -174,7 +213,7 @@ const BurgerConstructor = () => {
 
       {isOpenOrder && (
         <Modal onClose={() => setIsOpenOrder(false)}>
-          <OrderDetails orderNumber={order.orderNumber}/>
+          <OrderDetails/>
         </Modal>
       )}
     </>
