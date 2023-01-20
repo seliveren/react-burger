@@ -139,7 +139,7 @@ Filling.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const BurgerIngredients = ({setOpen, refOne, refTwo, refThree}) => {
+const BurgerIngredients = ({setOpen}) => {
   const dispatch = useDispatch();
   const data = useSelector(store => store.ingredients);
   const currentTab = useSelector(store => store.tab.currentTab);
@@ -150,13 +150,17 @@ const BurgerIngredients = ({setOpen, refOne, refTwo, refThree}) => {
     setOpen(true);
   };
 
-  const ref = React.createRef()
-  const [top, setTop] = React.useState(null)
+  const ref = React.createRef();
+  const [top, setTop] = React.useState(null);
+
+  const firstRef = React.useRef(null);
+  const secondRef = React.useRef(null);
+  const thirdRef = React.useRef(null);
 
   function handleScroll() {
-    const refOneHeight = refOne.current.scrollHeight;
-    const refTwoHeight = refTwo.current.scrollHeight;
-    const refThreeHeight = refThree.current.scrollHeight;
+    const refOneHeight = firstRef.current.scrollHeight;
+    const refTwoHeight = secondRef.current.scrollHeight;
+    const refThreeHeight = thirdRef.current.scrollHeight;
     const scrollTop = ref.current.scrollTop
     setTop({top: scrollTop})
 
@@ -172,21 +176,21 @@ const BurgerIngredients = ({setOpen, refOne, refTwo, refThree}) => {
   return (
     <section className={`pr-5 ${BurgerIngredientsStyles.section}`}>
       <h1 className={"text text_type_main-large pb-5 m-0"}>Соберите бургер</h1>
-      <Categories refOne={refOne} refTwo={refTwo} refThree={refThree}/>
+      <Categories refOne={firstRef} refTwo={secondRef} refThree={thirdRef}/>
       <div ref={ref} className={`mt-10 ${BurgerIngredientsStyles.scrollbar}`} onScroll={() => handleScroll()}>
-        <div id={'buns'} ref={refOne}>
+        <div id={'buns'} ref={firstRef}>
           <h2 className={"text text_type_main-medium pt-0 pl-0 pr-0 pb-6 m-0"}>Булки</h2>
           <div className={`pb-6 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
             <Buns data={data.ingredients} onClick={handleShownIngredient}/>
           </div>
         </div>
-        <div id={'sauces'} ref={refTwo}>
+        <div id={'sauces'} ref={secondRef}>
           <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Соусы</h2>
           <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
             <Sauces data={data.ingredients} onClick={handleShownIngredient}/>
           </div>
         </div>
-        <div id={'main'} ref={refThree}>
+        <div id={'main'} ref={thirdRef}>
           <h2 className={"text text_type_main-medium pt-10 pl-0 pr-0 pb-6 m-0"}>Начинки</h2>
           <div className={`pb-7 pl-6 pr-4 ${BurgerIngredientsStyles.ingredients}`}>
             <Filling data={data.ingredients} onClick={handleShownIngredient}/>
@@ -198,10 +202,7 @@ const BurgerIngredients = ({setOpen, refOne, refTwo, refThree}) => {
 }
 
 BurgerIngredients.propTypes = {
-  setOpen: PropTypes.func.isRequired,
-  refOne: PropTypes.object.isRequired,
-  refTwo: PropTypes.object.isRequired,
-  refThree: PropTypes.object.isRequired
+  setOpen: PropTypes.func.isRequired
 };
 
 export default BurgerIngredients;

@@ -21,9 +21,7 @@ const App = () => {
     [dispatch]
   );
 
-  const firstRef = React.useRef(null);
-  const secondRef = React.useRef(null);
-  const thirdRef = React.useRef(null);
+
 
   const [isOpenInfo, setIsOpenInfo] = React.useState(false);
 
@@ -34,17 +32,17 @@ const App = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      {data.isLoading &&
+      {data.ingredientsRequest &&
         <div className={AppStyles.loadingMessage}>Настройка связи с космосом...&#128125;</div>}
-      {data.hasError && <div className={AppStyles.errorMessage}>Связь с космосом нарушена!&#128165;</div>}
-      {!data.isLoading &&
-        !data.hasError &&
+      {data.ingredientsFailed && <div className={AppStyles.errorMessage}>Связь с космосом нарушена!&#128165;</div>}
+      {!data.ingredientsRequest &&
+        !data.ingredientsFailed &&
         data.ingredients.length &&
         <>
           <AppHeader/>
           <main className={AppStyles.main}>
 
-            <BurgerIngredients setOpen={setIsOpenInfo} refOne={firstRef} refTwo={secondRef} refThree={thirdRef}/>
+            <BurgerIngredients setOpen={setIsOpenInfo}/>
 
             <BurgerConstructor/>
 

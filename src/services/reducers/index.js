@@ -7,6 +7,7 @@ import {
   ORDER_CHECKOUT_REQUEST,
   ORDER_CHECKOUT_FAILED,
   ORDER_CHECKOUT_SUCCESS,
+  REFRESH_INGREDIENTS,
   SHOW_INGREDIENT_INFO,
   CLOSE_INGREDIENT_INFO,
   SET_CURRENT_TAB,
@@ -15,29 +16,18 @@ import {
   ADD_BUN,
   INCREASE_COUNTER,
   DECREASE_COUNTER,
+  REFRESH_COUNTER,
   CHANGE_ORDER
 } from '../actions/index';
 
 
 const initialState = {
   ingredients: [],
-  isLoading: false,
-  hasError: false,
+  ingredientsRequest: false,
+  ingredientsFailed: false,
   chosenIngredients: [],
-  chosenBun: {
-    _id: '60d3b41abdacab0026a733c7',
-    name: 'Флюоресцентная булка R2-D3',
-    type: 'bun',
-    proteins: 44,
-    fat: 26,
-    carbohydrates: 85,
-    calories: 643,
-    price: 988,
-    image: "https://code.s3.yandex.net/react/code/bun-01.png",
-    image_large: "https://code.s3.yandex.net/react/code/bun-01-large.png",
-    image_mobile: "https://code.s3.yandex.net/react/code/bun-01-mobile.png",
-    __v: 0
-  }
+  chosenBun: {},
+  uniqueKeys: []
 };
 
 const counterState = {};
@@ -98,8 +88,10 @@ export const ingredientsReducer = (state = initialState, action) => {
     case ADD_INGREDIENT: {
       return {
         ...state,
-        chosenIngredients: [...state.chosenIngredients, ...state.ingredients.filter(item => item._id === action.id)]
+        uniqueKeys: [...state.uniqueKeys, action.payload.key],
+        chosenIngredients: [...state.chosenIngredients, ...state.ingredients.filter(item => item._id === action.payload.id)]
       };
+
     }
     case ADD_BUN: {
       return {
@@ -117,6 +109,9 @@ export const ingredientsReducer = (state = initialState, action) => {
         ...state,
         chosenIngredients: state.chosenIngredients.map(item => item)
       };
+    }
+    case REFRESH_INGREDIENTS: {
+      return {...state, chosenBun: {}, chosenIngredients: []};
     }
     default: {
       return state;
@@ -144,6 +139,7 @@ export const orderReducer = (state = checkoutInitialState, action) => {
     }
   }
 };
+
 
 export const shownIngredientReducer = (state = shownIngredientState, action) => {
   switch (action.type) {
@@ -193,6 +189,11 @@ export const counterReducer = (state = counterState, action) => {
       return {
         ...state,
         [action.id]: (state[action.id] || 1) - 1
+      }
+    }
+    case REFRESH_COUNTER: {
+      return {
+        state: {}
       }
     }
     default: {

@@ -15,6 +15,7 @@ import {
   changeOrder
 } from '../../services/actions/index';
 import {useDrop, useDrag} from "react-dnd";
+import {v4 as uuidv4} from 'uuid';
 
 
 const Card = ({ingredient, index}) => {
@@ -108,11 +109,12 @@ BunBottom.propTypes = {
 };
 
 const Other = ({data, handleDelete}) => {
+  const key = useSelector(store => store.ingredients.uniqueKeys);
   const Other = React.useMemo(() => data.filter(mainIngredient => mainIngredient.type.includes('main') || mainIngredient.type.includes('sauce')), [data]);
   return (
     <>
       {Other.map((ingredient, index) => (
-        <Card ingredient={ingredient} key={index} index={index} handleDelete={handleDelete}/>
+        <Card ingredient={ingredient} key={index ? key[index] : null} index={index} handleDelete={handleDelete}/>
       ))}
     </>
   );
@@ -162,7 +164,7 @@ const BurgerConstructor = () => {
 
   const addMain = (id) => {
     const main = data.ingredients.filter((ingredient) => id === ingredient._id);
-    main[0].type.includes('main') || main[0].type.includes('sauce') ? dispatch(addIngredient(id)) : dispatch(addBun(id));
+    main[0].type.includes('main') || main[0].type.includes('sauce') ? dispatch(addIngredient(id, uuidv4())) : dispatch(addBun(id));
   };
 
   const mainSum = React.useMemo(() => (Object.keys(chosenIngredients).reduce(
@@ -191,31 +193,43 @@ const BurgerConstructor = () => {
     setIsOpenOrder(true)
   };
 
+  const orderData = useSelector(store => store.order);
 
   return (
     <>
       <section ref={drop} className={`pt-15 ${BurgerConstructorStyles.section}`}>
-        <BurgerTop data={chosenBun}/>
-        <div className={`pr-4 ${BurgerConstructorStyles.burgerStructure} ${BurgerConstructorStyles.scrollbar}`}>
+        {Object.keys(chosenBun).length !== 0 ? <BurgerTop data={chosenBun}/> : null}
+        <div
+          className={chosenIngredients.length > 5 ? `pr-4 ${BurgerConstructorStyles.burgerStructure} ${BurgerConstructorStyles.scrollbar}`
+            : Object.keys(chosenBun).length !== 0 || chosenIngredients.length > 0 ? `pr-4 ${BurgerConstructorStyles.burgerStructure}`
+              : `pr-4 ${BurgerConstructorStyles.burgerStructure} ${BurgerConstructorStyles.burgerToConstruct}`}>
+          {Object.keys(chosenBun).length !== 0 || chosenIngredients.length > 0 ? null :
+            <div className={`${BurgerConstructorStyles.burgerToConstructText}`}>Пожалуйста, перенесите сюда булку и
+              ингредиенты для создания заказа</div>}
           <Other data={chosenIngredients}/>
         </div>
-        <BurgerBottom data={chosenBun}/>
+        {Object.keys(chosenBun).length !== 0 ? <BurgerBottom data={chosenBun}/> : null}
         <div className={`pt-6 pr-5 ${BurgerConstructorStyles.orderConfirmation}`}>
           <div className={"text text_type_digits-medium"}>
-            <span>{mainSum + bunSum}</span>
+            <span>{Object.keys(chosenBun).length === 0 && chosenIngredients.length > 0 ? mainSum : Object.keys(chosenBun).length !== 0 || chosenIngredients.length > 0 ? mainSum + bunSum : 0}</span>
             <CurrencyIcon type={"primary"}/>
           </div>
-          <Button htmlType="button" type="primary" size="large" onClick={handleOrder}>
+          <Button htmlType="button" type="primary" size="large"
+                  onClick={Object.keys(chosenBun).length !== 0 ? handleOrder : () => {
+                  }} disabled={Object.keys(chosenBun).length === 0}>
             Оформить заказ
           </Button>
         </div>
       </section>
 
-      {isOpenOrder && (
-        <Modal onClose={() => setIsOpenOrder(false)}>
-          <OrderDetails/>
-        </Modal>
-      )}
+      {orderData.orderCheckoutRequest &&
+        <div className={BurgerConstructorStyles.orderLoadingMessage}>Формируем заказ...&#128125;</div>}
+      {!orderData.orderCheckoutRequest &&
+        !orderData.orderCheckoutFailed && isOpenOrder && (
+          <Modal onClose={() => setIsOpenOrder(false)}>
+            <OrderDetails/>
+          </Modal>
+        )}
     </>
   )
 }
