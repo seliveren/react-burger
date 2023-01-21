@@ -7,11 +7,25 @@
 }
 
 .burgerStructure {
-  height: 464px;
+  max-height: 464px;
   width: 568px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.burgerToConstruct {
+  background-color: #1C1C21;
+  border-radius: 25px;
+  border: 2px solid #4C4CFF;
+  max-height: 464px;
+  height: 100%;
+}
+
+.burgerToConstructText {
+  font-size: 25px;
+  text-align: center;
+  margin: auto;
 }
 
 .section {
@@ -22,7 +36,6 @@
 }
 
 .scrollbar {
-  max-height: 664px;
   overflow-y: scroll;
 }
 
@@ -40,9 +53,17 @@
   display: flex;
   align-items: center;
   gap: 8.5px;
+  cursor: grab;
 }
 
 .bunItem {
   display: flex;
 }
 
+.orderLoadingMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+}
