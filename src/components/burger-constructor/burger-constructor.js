@@ -24,7 +24,7 @@ const Card = ({ingredient, index}) => {
     dispatch(decreaseCounter(id));
     dispatch(deleteIngredient(index));
   }
-
+  const chosenIngredients = useSelector(store => store.ingredients.chosenIngredients);
   const ref = React.useRef(null);
 
   const [, drop] = useDrop({
@@ -33,8 +33,10 @@ const Card = ({ingredient, index}) => {
       if (!ref.current) {
         return
       }
-      const dragIndex = item.index;
+
+      const dragIndex = Object.values(chosenIngredients).findIndex(it => it._id === item.id);
       const hoverIndex = index;
+
       if (dragIndex === hoverIndex) {
         return
       }
@@ -109,12 +111,10 @@ BunBottom.propTypes = {
 };
 
 const Other = ({data, handleDelete}) => {
-  const key = useSelector(store => store.ingredients.uniqueKeys);
-  const Other = React.useMemo(() => data.filter(mainIngredient => mainIngredient.type.includes('main') || mainIngredient.type.includes('sauce')), [data]);
   return (
     <>
-      {Other.map((ingredient, index) => (
-        <Card ingredient={ingredient} key={index ? key[index] : null} index={index} handleDelete={handleDelete}/>
+      {data.map((ingredient, index) => (
+        <Card ingredient={ingredient} key={ingredient.uuid} index={index} handleDelete={handleDelete}/>
       ))}
     </>
   );
@@ -163,8 +163,9 @@ const BurgerConstructor = () => {
   }))
 
   const addMain = (id) => {
-    const main = data.ingredients.filter((ingredient) => id === ingredient._id);
-    main[0].type.includes('main') || main[0].type.includes('sauce') ? dispatch(addIngredient(id, uuidv4())) : dispatch(addBun(id));
+    const item = data.ingredients.find((ingredient) => id === ingredient._id);
+    const itemWithUUID = {...item, uuid: uuidv4()};
+    item.type.includes('bun') ? dispatch(addBun(item)) : dispatch(addIngredient(itemWithUUID));
   };
 
   const mainSum = React.useMemo(() => (Object.keys(chosenIngredients).reduce(

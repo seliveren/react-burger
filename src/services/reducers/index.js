@@ -1,5 +1,4 @@
 import {combineReducers} from 'redux';
-
 import {
   GET_INGREDIENTS_FAILED,
   GET_INGREDIENTS_REQUEST,
@@ -26,27 +25,13 @@ const initialState = {
   ingredientsRequest: false,
   ingredientsFailed: false,
   chosenIngredients: [],
-  chosenBun: {},
-  uniqueKeys: []
+  chosenBun: {}
 };
 
 const counterState = {};
 
 const shownIngredientState = {
-  openedIngredient: {
-    _id: "",
-    name: "",
-    type: "",
-    proteins: null,
-    fat: null,
-    carbohydrates: null,
-    calories: null,
-    price: null,
-    image: "",
-    image_mobile: "",
-    image_large: "",
-    __v: null
-  }
+  openedIngredient: {}
 };
 
 const checkoutInitialState = {
@@ -59,7 +44,7 @@ const checkoutInitialState = {
 
 const initialTabsState = {
   currentTab: 'one'
-}
+};
 
 
 export const ingredientsReducer = (state = initialState, action) => {
@@ -88,15 +73,13 @@ export const ingredientsReducer = (state = initialState, action) => {
     case ADD_INGREDIENT: {
       return {
         ...state,
-        uniqueKeys: [...state.uniqueKeys, action.payload.key],
-        chosenIngredients: [...state.chosenIngredients, ...state.ingredients.filter(item => item._id === action.payload.id)]
+        chosenIngredients: [...state.chosenIngredients, action.item]
       };
-
     }
     case ADD_BUN: {
       return {
         ...state,
-        chosenBun: {...state.ingredients.filter(item => item._id === action.id)}[0]
+        chosenBun: {...state.ingredients.filter(item => item._id === action.item._id)[0]}
       };
     }
     case CHANGE_ORDER: {

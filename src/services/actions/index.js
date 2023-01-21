@@ -113,17 +113,17 @@ export function deleteIngredient(index) {
   }
 }
 
-export function addIngredient(id, key) {
+export function addIngredient(item) {
   return {
     type: ADD_INGREDIENT,
-    payload: {id, key}
+    item
   }
 }
 
-export function addBun(id) {
+export function addBun(item) {
   return {
     type: ADD_BUN,
-    id
+    item
   }
 }
 
