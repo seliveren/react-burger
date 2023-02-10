@@ -1,4 +1,4 @@
-import {Routes, Route, useLocation} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 import MainPage from "./pages/main";
 import RegistrationPage from "./pages/registration";
 import LoginPage from "./pages/login";
@@ -14,7 +14,7 @@ import React from "react";
 import Error404Page from "./pages/error-404";
 
 export default function App() {
-console.log(useLocation().state)
+
   return (
     <Routes>
       <Route path="/" element={<MainPage/>}>
