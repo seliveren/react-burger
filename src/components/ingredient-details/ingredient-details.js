@@ -1,10 +1,9 @@
 import React from "react";
 import IngredientDetailsStyles from "./ingredient-details.module.css";
-import {useSelector} from "react-redux";
 
 const IngredientDetails = () => {
 
-  const ingredient = useSelector(store => store.shownIngredient.openedIngredient);
+  const ingredient = JSON.parse(localStorage.getItem('ingredient'));
 
   return (
     <div className={IngredientDetailsStyles.info}>

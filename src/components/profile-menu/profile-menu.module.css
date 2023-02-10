@@ -1,0 +1,19 @@
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.text {
+  max-width: 320px;
+  width: 100%;
+}
+
+.el {
+  line-height: 2.7;
+}
+
+.el:hover {
+  cursor: pointer;
+  color: #FFF;
+}
