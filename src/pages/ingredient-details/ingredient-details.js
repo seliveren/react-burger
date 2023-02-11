@@ -1,5 +1,5 @@
 import React from "react";
-import IngredientDetails from "../components/ingredient-details/ingredient-details";
+import IngredientDetails from "../../components/ingredient-details/ingredient-details";
 import IngredientDetailsStyles from "./ingredient-details.module.css";
 
 

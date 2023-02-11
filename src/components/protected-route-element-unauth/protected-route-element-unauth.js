@@ -1,7 +1,10 @@
-import { Navigate } from 'react-router-dom';
-import {getCookie} from "../../utils/util-functions";
+import {Navigate} from 'react-router-dom';
+import {loginUrl} from "../../utils/constants";
+import {useSelector} from "react-redux";
 
 
-export function ProtectedRouteElementUnauth({ element }) {
-  return getCookie('token') ? element : <Navigate to="/login" replace/>;
+export function ProtectedRouteElementUnauth({element}) {
+  const auth = useSelector(store => store.auth.isAuth);
+
+  return auth ? element : <Navigate to={loginUrl} replace/>;
 }

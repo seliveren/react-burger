@@ -3,7 +3,7 @@ import React from "react";
 import {PasswordInput, Button, Input} from "@ya.praktikum/react-developer-burger-ui-components";
 import {Link} from 'react-router-dom';
 import {useDispatch} from "react-redux";
-import {resetPassword} from "../../services/actions";
+import {checkToken, resetPassword} from "../../services/actions";
 
 
 const ResetPasswordForm = () => {
@@ -12,10 +12,13 @@ const ResetPasswordForm = () => {
   const [code, setCode] = React.useState('');
   const [password, setPassword] = React.useState('')
 
+  React.useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
+
   const onClick = (e) => {
     e.preventDefault();
     dispatch(resetPassword(password, code));
-    console.log(`${code}, ${password}`)
   }
 
   return (

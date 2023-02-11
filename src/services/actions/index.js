@@ -1,6 +1,6 @@
 import {request} from "../../utils/server-interaction";
 import {baseUrl} from "../../utils/constants";
-import {getCookie, setCookie} from "../../utils/util-functions";
+import {cookieValue, getCookie, setCookie, deleteCookie} from "../../utils/util-functions";
 
 export const GET_INGREDIENTS_REQUEST = 'GET_RECOMMENDED_ITEMS_REQUEST';
 export const GET_INGREDIENTS_SUCCESS = 'GET_RECOMMENDED_ITEMS_SUCCESS';
@@ -57,6 +57,9 @@ export const LOGOUT_USER_SUCCESS = 'LOGOUT_USER_SUCCESS';
 export const NEW_TOKEN_REQUEST = 'NEW_TOKEN_REQUEST';
 export const NEW_TOKEN_FAILED = 'NEW_TOKEN_FAILED';
 export const NEW_TOKEN_SUCCESS = 'NEW_TOKEN_SUCCESS';
+
+export const CHECK_TOKEN = 'CHECK_TOKEN';
+
 
 export function getIngredients() {
   return function (dispatch) {
@@ -184,7 +187,7 @@ export function changeOrder(oldIndex, newIndex) {
   }
 }
 
-export function registerNewUser(username, email, password) {
+export function registerNewUser(username, email, password, onSuccess) {
   return function (dispatch) {
     dispatch({
       type: REGISTER_USER_REQUEST
@@ -207,6 +210,7 @@ export function registerNewUser(username, email, password) {
           accessToken: res.accessToken,
           refreshToken: res.refreshToken
         });
+        onSuccess();
       } else {
         dispatch({
           type: REGISTER_USER_FAILED
@@ -220,7 +224,7 @@ export function registerNewUser(username, email, password) {
   };
 }
 
-export function sendResetPasswordCode(email) {
+export function sendResetPasswordCode(email, onSuccess) {
   return function (dispatch) {
     dispatch({
       type: SEND_CODE_REQUEST
@@ -239,6 +243,7 @@ export function sendResetPasswordCode(email) {
           type: SEND_CODE_SUCCESS,
           code: res.data
         });
+        onSuccess();
       } else {
         dispatch({
           type: SEND_CODE_FAILED
@@ -285,7 +290,7 @@ export function resetPassword(password, code) {
   };
 }
 
-export function requestAuth(email, password) {
+export function requestAuth(email, password, onSuccess) {
   return function (dispatch) {
     dispatch({
       type: SEND_AUTH_REQUEST
@@ -320,6 +325,7 @@ export function requestAuth(email, password) {
             accessToken: res.accessToken,
             refreshToken: res.refreshToken
           });
+          onSuccess();
         } else {
           dispatch({
             type: SEND_AUTH_FAILED
@@ -362,7 +368,7 @@ export function getUser() {
         });
       }
     }).catch(() => {
-      dispatch(requestNewToken(getCookie('refreshToken')));
+      dispatch(requestNewToken(getCookie('refreshToken'), getUser()));
       dispatch({
         type: GET_USER_FAILED
       });
@@ -409,7 +415,7 @@ export function updateUser(updatedName, updatedEmail) {
   };
 }
 
-export function requestLogout(refreshToken) {
+export function requestLogout(onSuccess) {
   return function (dispatch) {
     dispatch({
       type: LOGOUT_USER_REQUEST
@@ -420,7 +426,7 @@ export function requestLogout(refreshToken) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        "token": refreshToken
+        "token": cookieValue
       })
     }).then(res => {
         if (res && res.success) {
@@ -430,6 +436,9 @@ export function requestLogout(refreshToken) {
             accessToken: res.accessToken,
             refreshToken: res.refreshToken
           });
+          deleteCookie('refreshToken')
+          deleteCookie('token');
+          onSuccess();
         } else {
           dispatch({
             type: LOGOUT_USER_FAILED
@@ -444,7 +453,7 @@ export function requestLogout(refreshToken) {
   };
 }
 
-export function requestNewToken(refreshToken) {
+export function requestNewToken(refreshToken, requestAgain) {
   return function (dispatch) {
     dispatch({
       type: NEW_TOKEN_REQUEST
@@ -473,7 +482,7 @@ export function requestNewToken(refreshToken) {
             accessToken: res.accessToken,
             refreshToken: res.refreshToken
           });
-          dispatch(getUser());
+          dispatch(requestAgain());
         } else {
           dispatch({
             type: NEW_TOKEN_FAILED
@@ -486,5 +495,11 @@ export function requestNewToken(refreshToken) {
         });
       });
   };
+}
+
+export function checkToken() {
+  return {
+    type: CHECK_TOKEN
+  }
 }
 

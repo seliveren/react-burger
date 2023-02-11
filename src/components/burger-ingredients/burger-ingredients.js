@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {setCurrentTab, showIngredientInfo, increaseCounter} from "../../services/actions";
 import {useDrag} from "react-dnd";
 import {useNavigate} from "react-router-dom";
+import {ingredientsUrl} from "../../utils/constants";
+
 
 const Categories = ({refOne, refTwo, refThree}) => {
   const currentTab = useSelector(store => store.tab.currentTab);
@@ -139,7 +141,7 @@ Filling.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const BurgerIngredients = ({setOpen}) => {
+const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const data = useSelector(store => store.ingredients);
   const currentTab = useSelector(store => store.tab.currentTab);
@@ -148,9 +150,8 @@ const BurgerIngredients = ({setOpen}) => {
   const handleShownIngredient = (e) => {
     const currentIngredient = data.ingredients.find(el => el._id === e.currentTarget.dataset.id);
     dispatch(showIngredientInfo(currentIngredient));
-    setOpen(true);
     localStorage.setItem('ingredient', JSON.stringify(currentIngredient));
-    navigate(`ingredients/${currentIngredient._id}`, {
+    navigate(`${ingredientsUrl}/${currentIngredient._id}`, {
       state: {
         modalOpen: true
       }
@@ -207,9 +208,5 @@ const BurgerIngredients = ({setOpen}) => {
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  setOpen: PropTypes.func.isRequired
-};
 
 export default BurgerIngredients;

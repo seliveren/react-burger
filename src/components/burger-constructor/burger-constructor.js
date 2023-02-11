@@ -18,6 +18,8 @@ import {useDrop, useDrag} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from 'react-router-dom';
 import {getCookie} from "../../utils/util-functions";
+import {loginUrl} from "../../utils/constants";
+import {checkToken} from "../../services/actions";
 
 
 const Card = ({ingredient, index}) => {
@@ -155,6 +157,12 @@ const BurgerConstructor = () => {
   const chosenBun = useSelector(store => store.ingredients.chosenBun);
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
+
+  const auth = useSelector(store => store.auth.isAuth)
+
   const [{isOver}, drop] = useDrop(() => ({
     accept: "mainIngredient",
     drop: (item) => addMain(item.id),
@@ -191,12 +199,11 @@ const BurgerConstructor = () => {
 
 
   const handleOrder = () => {
-    const isToken = getCookie('token');
-    if (isToken !== undefined && Object.keys(chosenBun).length !== 0) {
+    if (auth && Object.keys(chosenBun).length !== 0) {
       dispatch(postOrder(pickedIngredients));
       setIsOpenOrder(true)
-    } else if (!isToken && Object.keys(chosenBun).length !== 0) {
-      navigate("/login");
+    } else if (!auth && Object.keys(chosenBun).length !== 0) {
+      navigate(`${loginUrl}`);
     }
   };
 

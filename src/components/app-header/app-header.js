@@ -4,20 +4,23 @@ import {Logo} from "@ya.praktikum/react-developer-burger-ui-components";
 import {BurgerIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {ListIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {ProfileIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {NavLink} from 'react-router-dom';
+import {NavLink, useLocation} from 'react-router-dom';
+import {homeUrl, profileUrl} from "../../utils/constants";
+
 
 const AppHeader = () => {
-  const currentLocation = window.location.href.split("/")[3];
+
+  const location = useLocation();
 
   return (
     <header>
       <nav>
         <ul className={`pl-30 pr-30 pb-4 pt-4 m-10 ${headerStyles.ul}`}>
-          <NavLink className={headerStyles.navlink} to='/' state={{
+          <NavLink className={headerStyles.navlink} to={homeUrl} state={{
             homePage: true
           }}>
             <li className={`pl-30 pb-4 pt-4 ${headerStyles.li}`}>
-              {currentLocation === "" ?
+              {location.state?.homePage ?
                 <>
                   <BurgerIcon type="primary"/> <span
                   className={`text text_type_main-default ${headerStyles.link_active}`}>Конструктор</span>
@@ -35,9 +38,12 @@ const AppHeader = () => {
           <li className={`pr-30 mr-6 ml-2 ${headerStyles.li}`}>
             <Logo/>
           </li>
-          <NavLink className={headerStyles.navlink} to='/profile'>
+          <NavLink className={headerStyles.navlink} to={profileUrl} state={{
+            profilePage: true,
+            mainProfile: true
+          }}>
             <li className={`pr-30 pl-30 pb-4 pt-4 ${headerStyles.li}`}>
-              {currentLocation === "profile" || currentLocation === "orders-history" ?
+              {location.state?.profilePage ?
                 <>
                   <ProfileIcon type="primary"/>
                   <span className={`text text_type_main-default ${headerStyles.link_active}`}>Личный кабинет</span>

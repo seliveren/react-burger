@@ -1,23 +1,22 @@
 import React from "react";
-import AppHeader from "../../src/components/app-header/app-header";
 import AppStyles from "./main.module.css";
-import BurgerIngredients from "../../src/components/burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../../src/components/burger-constructor/burger-constructor";
-import Modal from "../../src/components/modal/modal";
-import IngredientDetails from "../../src/components/ingredient-details/ingredient-details";
+import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
+import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
+import Modal from "../../components/modal/modal";
+import IngredientDetails from "../../components/ingredient-details/ingredient-details";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {useDispatch, useSelector} from "react-redux";
-import {getIngredients, closeIngredientInfo} from "../services/actions/index";
+import {getIngredients, closeIngredientInfo} from "../../services/actions";
 import {useLocation, useNavigate} from "react-router-dom";
-import IngredientDetailsPage from "./ingredient-details";
+import IngredientDetailsPage from "../ingredient-details/ingredient-details";
+import {homeUrl} from "../../utils/constants";
 
 
 const MainPage = () => {
 
   const data = useSelector(store => store.ingredients);
   const dispatch = useDispatch();
-  const [isOpenInfo, setIsOpenInfo] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -29,9 +28,8 @@ const MainPage = () => {
   );
 
   const handleCloseIngredient = () => {
-    setIsOpenInfo(false);
     dispatch(closeIngredientInfo());
-    navigate("/", {
+    navigate(`${homeUrl}`, {
       state: {
         homePage: true
       }
@@ -47,7 +45,6 @@ const MainPage = () => {
         !data.ingredientsFailed &&
         data.ingredients.length &&
         <>
-          <AppHeader/>
           <main className={AppStyles.main}>
 
             {!location.state?.homePage && !location.state?.modalOpen && <IngredientDetailsPage/>}
@@ -58,14 +55,14 @@ const MainPage = () => {
                   <IngredientDetails/>
                 </Modal>
 
-                <BurgerIngredients setOpen={setIsOpenInfo}/>
+                <BurgerIngredients/>
                 <BurgerConstructor/>
               </>
             )}
 
             {location.state?.homePage && (
               <>
-                <BurgerIngredients setOpen={setIsOpenInfo}/>
+                <BurgerIngredients/>
                 <BurgerConstructor/>
               </>
             )}

@@ -41,7 +41,9 @@ import {
   NEW_TOKEN_REQUEST,
   NEW_TOKEN_SUCCESS,
   NEW_TOKEN_FAILED,
+  CHECK_TOKEN
 } from '../actions/index';
+import {getCookie} from "../../utils/util-functions";
 
 
 const initialState = {
@@ -92,6 +94,10 @@ const resetData = {
   resetData: {},
   resetPasswordRequest: false,
   resetPasswordFailed: false
+};
+
+const auth = {
+  isAuth: false
 };
 
 
@@ -416,6 +422,21 @@ export const requestNewTokenReducer = (state = userInfo, action) => {
 };
 
 
+export const checkTokenReducer = (state = auth, action) => {
+  switch (action.type) {
+    case CHECK_TOKEN: {
+      return {
+        ...state,
+        isAuth: !!getCookie('token')
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   order: orderReducer,
@@ -429,5 +450,6 @@ export const rootReducer = combineReducers({
   getUser: getUserReducer,
   updateUser: updateUserReducer,
   logoutUser: logoutUserReducer,
-  newToken: requestNewTokenReducer
+  newToken: requestNewTokenReducer,
+  auth: checkTokenReducer
 });

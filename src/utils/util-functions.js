@@ -1,3 +1,9 @@
+export const cookieValue = document.cookie
+  .split('; ')
+  .find((el) => el.startsWith('refreshToken='))
+  ?.split('=')[1];
+
+
 export function setCookie(name, value, props) {
   props = props || {};
   let exp = props.expires;

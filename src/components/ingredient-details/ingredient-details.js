@@ -1,6 +1,7 @@
 import React from "react";
 import IngredientDetailsStyles from "./ingredient-details.module.css";
 
+
 const IngredientDetails = () => {
 
   const ingredient = JSON.parse(localStorage.getItem('ingredient'));

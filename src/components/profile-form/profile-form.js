@@ -2,7 +2,8 @@ import ProfileFormStyles from "./profile-form.module.css";
 import React from "react";
 import {PasswordInput, EmailInput, Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from "react-redux";
-import {getUser, updateUser} from "../../services/actions";
+import {checkToken, getUser, updateUser} from "../../services/actions";
+
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const ProfileForm = () => {
 
   React.useEffect(() => {
       dispatch(getUser());
+      dispatch(checkToken());
       setEmail(user.email);
       setName(user.name);
     },
@@ -17,11 +19,11 @@ const ProfileForm = () => {
 
   const [email, setEmail] = React.useState(`${user.email}`);
   const [name, setName] = React.useState(`${user.name}`);
-  const [password, setPassword] = React.useState(`iamhappy`);
+  const [password, setPassword] = React.useState('');
   const [change, setChange] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
 
-  const onSave = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUser(name, email));
     setChange(false);
@@ -39,7 +41,7 @@ const ProfileForm = () => {
 
   return (
     <section>
-      <form className={ProfileFormStyles.form}>
+      <form onSubmit={onSubmit} className={ProfileFormStyles.form}>
         <Input value={name} type="text" onIconClick={() => setDisabled(false)} icon="EditIcon" name={'name'}
                placeholder="Имя" onChange={(e) => {
           setName(e.target.value);
@@ -55,7 +57,7 @@ const ProfileForm = () => {
         }}/>
         {change && (<div className={ProfileFormStyles.buttons}>
           <Button htmlType="button" type="secondary" size="medium" onClick={onDiscard}>Отмена</Button>
-          <Button htmlType="button" type="primary" size="medium" onClick={onSave}>Сохранить</Button>
+          <Button htmlType="submit" type="primary" size="medium">Сохранить</Button>
         </div>)}
       </form>
     </section>

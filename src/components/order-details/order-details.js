@@ -3,6 +3,7 @@ import orderDetailsStyles from "./order-details.module.css";
 import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useSelector} from "react-redux";
 
+
 const OrderDetails = () => {
 
   const orderNumber = useSelector(store => store.order.order.number);
