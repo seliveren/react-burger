@@ -5,6 +5,7 @@ import PortalReactDOM from 'react-dom'
 import PropTypes from "prop-types";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 
+
 const modalRoot = document.getElementById('react-modules');
 
 const Modal = ({children, header, onClose}) => {

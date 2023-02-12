@@ -16,6 +16,10 @@ import {
 } from '../../services/actions/index';
 import {useDrop, useDrag} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
+import {useNavigate} from 'react-router-dom';
+import {getCookie} from "../../utils/util-functions";
+import {loginUrl} from "../../utils/constants";
+import {checkToken} from "../../services/actions";
 
 
 const Card = ({ingredient, index}) => {
@@ -146,13 +150,18 @@ BurgerBottom.propTypes = {
 
 
 const BurgerConstructor = () => {
-
-  const data = useSelector(store => store.ingredients);
   const dispatch = useDispatch();
+  const data = useSelector(store => store.ingredients);
   const [isOpenOrder, setIsOpenOrder] = React.useState(false);
-
   const chosenIngredients = useSelector(store => store.ingredients.chosenIngredients);
   const chosenBun = useSelector(store => store.ingredients.chosenBun);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
+
+  const auth = useSelector(store => store.auth.isAuth)
 
   const [{isOver}, drop] = useDrop(() => ({
     accept: "mainIngredient",
@@ -190,8 +199,12 @@ const BurgerConstructor = () => {
 
 
   const handleOrder = () => {
-    dispatch(postOrder(pickedIngredients));
-    setIsOpenOrder(true)
+    if (auth && Object.keys(chosenBun).length !== 0) {
+      dispatch(postOrder(pickedIngredients));
+      setIsOpenOrder(true)
+    } else if (!auth && Object.keys(chosenBun).length !== 0) {
+      navigate(`${loginUrl}`);
+    }
   };
 
   const orderData = useSelector(store => store.order);
@@ -216,8 +229,7 @@ const BurgerConstructor = () => {
             <CurrencyIcon type={"primary"}/>
           </div>
           <Button htmlType="button" type="primary" size="large"
-                  onClick={Object.keys(chosenBun).length !== 0 ? handleOrder : () => {
-                  }} disabled={Object.keys(chosenBun).length === 0}>
+                  onClick={handleOrder} disabled={Object.keys(chosenBun).length === 0}>
             Оформить заказ
           </Button>
         </div>
@@ -227,7 +239,9 @@ const BurgerConstructor = () => {
         <div className={BurgerConstructorStyles.orderLoadingMessage}>Формируем заказ...&#128125;</div>}
       {!orderData.orderCheckoutRequest &&
         !orderData.orderCheckoutFailed && isOpenOrder && (
-          <Modal onClose={() => setIsOpenOrder(false)}>
+          <Modal onClose={() => {
+            setIsOpenOrder(false)
+          }}>
             <OrderDetails/>
           </Modal>
         )}

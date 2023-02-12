@@ -6,6 +6,8 @@ import {ingredientType} from "../../utils/types.js";
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentTab, showIngredientInfo, increaseCounter} from "../../services/actions";
 import {useDrag} from "react-dnd";
+import {useNavigate} from "react-router-dom";
+import {ingredientsUrl} from "../../utils/constants";
 
 
 const Categories = ({refOne, refTwo, refThree}) => {
@@ -15,7 +17,6 @@ const Categories = ({refOne, refTwo, refThree}) => {
   const handleScrollOnClick = (ref) => {
     ref.scrollIntoView({behavior: 'smooth', block: 'nearest'});
   };
-
 
   return (
     <div className={BurgerIngredientsStyles.categories}>
@@ -56,7 +57,6 @@ const Card = ({ingredient, className, onClick, index}) => {
     }),
   }));
 
-
   const currentCountEntries = Object.entries(qty);
   let currentCount = 0;
   currentCountEntries.forEach(([key, value]) => {
@@ -65,21 +65,23 @@ const Card = ({ingredient, className, onClick, index}) => {
     }
   });
 
-
   return (
-    <div className={className} onClick={onClick} data-id={ingredient._id} onDragEnd={() => {
-      dispatch(increaseCounter(ingredient._id, index))
-    }}>
-      {ingredient.type === 'bun' && ingredient._id === chosenBun._id ?
-        <Counter count={2} size="default"/> : (currentCount !== 0 && ingredient.type !== 'bun' ?
-          <Counter count={currentCount} size="default"/> : null)}
-      <img ref={drag} src={ingredient.image} alt={ingredient.name}/>
-      <div className={BurgerIngredientsStyles.priceTag}>
-        <span className="text text_type_digits-default">{ingredient.price}</span>
-        <CurrencyIcon type={"primary"}/>
+    <>
+      <div className={className} onClick={onClick} data-id={ingredient._id} onDragEnd={() => {
+        dispatch(increaseCounter(ingredient._id, index))
+      }}>
+        {ingredient.type === 'bun' && ingredient._id === chosenBun._id ?
+          <Counter count={2} size="default"/> : (currentCount !== 0 && ingredient.type !== 'bun' ?
+            <Counter count={currentCount} size="default"/> : null)}
+        <img ref={drag} src={ingredient.image} alt={ingredient.name}/>
+        <div className={BurgerIngredientsStyles.priceTag}>
+          <span className="text text_type_digits-default">{ingredient.price}</span>
+          <CurrencyIcon type={"primary"}/>
+        </div>
+        <h3
+          className={`text text_type_main-default m-0 ${BurgerIngredientsStyles.ingredientName}`}>{ingredient.name}</h3>
       </div>
-      <h3 className={`text text_type_main-default m-0 ${BurgerIngredientsStyles.ingredientName}`}>{ingredient.name}</h3>
-    </div>
+    </>
   );
 };
 
@@ -139,15 +141,21 @@ Filling.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const BurgerIngredients = ({setOpen}) => {
+const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const data = useSelector(store => store.ingredients);
   const currentTab = useSelector(store => store.tab.currentTab);
+  const navigate = useNavigate();
 
   const handleShownIngredient = (e) => {
     const currentIngredient = data.ingredients.find(el => el._id === e.currentTarget.dataset.id);
     dispatch(showIngredientInfo(currentIngredient));
-    setOpen(true);
+    localStorage.setItem('ingredient', JSON.stringify(currentIngredient));
+    navigate(`${ingredientsUrl}/${currentIngredient._id}`, {
+      state: {
+        modalOpen: true
+      }
+    });
   };
 
   const ref = React.createRef();
@@ -200,9 +208,5 @@ const BurgerIngredients = ({setOpen}) => {
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  setOpen: PropTypes.func.isRequired
-};
 
 export default BurgerIngredients;

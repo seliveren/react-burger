@@ -1,61 +1,51 @@
+import {Routes, Route} from 'react-router-dom';
+import MainPage from "../../pages/main/main";
+import RegistrationPage from "../../pages/registration/registration";
+import LoginPage from "../../pages/login/login";
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
+import ProfilePage from "../../pages/profile/profile";
+import {ProtectedRouteElementAuth} from "../protected-route-element-auth/protected-route-element-auth";
+import {ProtectedRouteElementUnauth} from "../protected-route-element-unauth/protected-route-element-unauth";
+import {ProtectedRouteElementReset} from "../protected-route-element-reset/protected-route-element-reset";
+import OrdersHistoryPage from "../../pages/orders-history/orders-history";
+import IngredientDetailsPage from "../../pages/ingredient-details/ingredient-details";
 import React from "react";
+import Error404Page from "../../pages/error-404/error-404";
 import AppHeader from "../app-header/app-header";
-import AppStyles from "./app.module.css";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import {DndProvider} from "react-dnd";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {useDispatch, useSelector} from "react-redux";
-import {getIngredients, closeIngredientInfo} from "../../services/actions/index";
-
-const App = () => {
-  const data = useSelector(store => store.ingredients);
-  const dispatch = useDispatch();
-
-  React.useEffect(
-    () => {
-      dispatch(getIngredients());
-    },
-    [dispatch]
-  );
+import {
+  ingredientsUrl,
+  homeUrl,
+  loginUrl,
+  registerUrl,
+  forgotPasswordUrl,
+  resetPasswordUrl,
+  profileUrl,
+  ordersHistoryUrl,
+  anyUrl
+} from "../../utils/constants";
 
 
-
-  const [isOpenInfo, setIsOpenInfo] = React.useState(false);
-
-  const handleCloseIngredient = () => {
-    setIsOpenInfo(false);
-    dispatch(closeIngredientInfo());
-  };
+export default function App() {
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {data.ingredientsRequest &&
-        <div className={AppStyles.loadingMessage}>Настройка связи с космосом...&#128125;</div>}
-      {data.ingredientsFailed && <div className={AppStyles.errorMessage}>Связь с космосом нарушена!&#128165;</div>}
-      {!data.ingredientsRequest &&
-        !data.ingredientsFailed &&
-        data.ingredients.length &&
-        <>
-          <AppHeader/>
-          <main className={AppStyles.main}>
-
-            <BurgerIngredients setOpen={setIsOpenInfo}/>
-
-            <BurgerConstructor/>
-
-            {isOpenInfo && (
-              <Modal onClose={() => handleCloseIngredient()} header={'Детали ингредиента'}>
-                <IngredientDetails/>
-              </Modal>
-            )}
-
-          </main>
-        </>}
-    </DndProvider>
+    <>
+      <AppHeader/>
+      <Routes>
+        <Route path={homeUrl} element={<MainPage/>}>
+          <Route path={`${ingredientsUrl}/:id`} element={<IngredientDetailsPage/>}/>
+        </Route>
+        <Route path={loginUrl} element={<ProtectedRouteElementAuth element={<LoginPage/>}/>}/>
+        <Route path={registerUrl} element={<ProtectedRouteElementAuth element={<RegistrationPage/>}/>}/>
+        <Route path={forgotPasswordUrl} element={<ProtectedRouteElementAuth element={<ForgotPasswordPage/>}/>}/>
+        <Route path={resetPasswordUrl} element={<ProtectedRouteElementReset element={<ResetPasswordPage/>}/>}/>
+        <Route path={profileUrl} element={<ProtectedRouteElementUnauth element={<ProfilePage/>}/>}/>
+        <Route path={ordersHistoryUrl} element={<ProtectedRouteElementUnauth element={<OrdersHistoryPage/>}/>}/>
+        <Route path={anyUrl} element={<Error404Page/>}/>
+      </Routes>
+    </>
   );
 }
 
-export default App;
+
+
