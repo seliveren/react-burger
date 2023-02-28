@@ -6,8 +6,9 @@ export const registerUrl = '/register';
 export const forgotPasswordUrl = '/forgot-password';
 export const resetPasswordUrl = '/reset-password';
 export const profileUrl = '/profile';
-export const ordersHistoryUrl = '/orders-history';
+export const ordersHistoryUrl = 'orders';
 export const anyUrl = '*';
+export const feedPageUrl = '/feed';
 
 
 

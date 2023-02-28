@@ -60,6 +60,8 @@ export const NEW_TOKEN_SUCCESS = 'NEW_TOKEN_SUCCESS';
 
 export const CHECK_TOKEN = 'CHECK_TOKEN';
 
+export const SHOW_ORDER_INFO = 'SHOW_ORDER_INFO';
+export const CLOSE_ORDER_INFO = 'CLOSE_ORDER_INFO';
 
 export function getIngredients() {
   return function (dispatch) {
@@ -503,3 +505,16 @@ export function checkToken() {
   }
 }
 
+export function showOrderInfo(currentOrder) {
+  return {
+    type: SHOW_ORDER_INFO,
+    openedOrder: currentOrder
+  }
+}
+
+export function closeOrderInfo(currentOrder) {
+  return {
+    type: CLOSE_ORDER_INFO,
+    openedOrder: currentOrder
+  }
+}

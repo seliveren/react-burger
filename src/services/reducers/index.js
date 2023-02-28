@@ -41,7 +41,9 @@ import {
   NEW_TOKEN_REQUEST,
   NEW_TOKEN_SUCCESS,
   NEW_TOKEN_FAILED,
-  CHECK_TOKEN
+  CHECK_TOKEN,
+  SHOW_ORDER_INFO,
+  CLOSE_ORDER_INFO
 } from '../actions/index';
 import {getCookie} from "../../utils/util-functions";
 
@@ -97,7 +99,11 @@ const resetData = {
 };
 
 const auth = {
-  isAuth: false
+  isAuth: true
+};
+
+const shownOrderState = {
+  openedOrder: {}
 };
 
 
@@ -437,6 +443,26 @@ export const checkTokenReducer = (state = auth, action) => {
 };
 
 
+export const shownOrderReducer = (state = shownOrderState, action) => {
+  switch (action.type) {
+    case SHOW_ORDER_INFO: {
+      return {
+        ...state,
+        openedOrder: action.openedOrder
+      };
+    }
+    case CLOSE_ORDER_INFO: {
+      return {
+        ...state,
+        openedOrder: {}
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   order: orderReducer,
@@ -451,5 +477,6 @@ export const rootReducer = combineReducers({
   updateUser: updateUserReducer,
   logoutUser: logoutUserReducer,
   newToken: requestNewTokenReducer,
-  auth: checkTokenReducer
+  auth: checkTokenReducer,
+  shownOrder: shownOrderReducer
 });

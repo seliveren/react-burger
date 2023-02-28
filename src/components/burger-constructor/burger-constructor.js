@@ -17,7 +17,6 @@ import {
 import {useDrop, useDrag} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from 'react-router-dom';
-import {getCookie} from "../../utils/util-functions";
 import {loginUrl} from "../../utils/constants";
 import {checkToken} from "../../services/actions";
 

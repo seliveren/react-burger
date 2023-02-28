@@ -7,7 +7,7 @@ import IngredientDetails from "../../components/ingredient-details/ingredient-de
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {useDispatch, useSelector} from "react-redux";
-import {getIngredients, closeIngredientInfo} from "../../services/actions";
+import {getIngredients, closeIngredientInfo, checkToken} from "../../services/actions";
 import {useLocation, useNavigate} from "react-router-dom";
 import IngredientDetailsPage from "../ingredient-details/ingredient-details";
 import {homeUrl} from "../../utils/constants";
@@ -19,6 +19,11 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
+
 
   React.useEffect(
     () => {

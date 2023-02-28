@@ -1,0 +1,26 @@
+.currentStatuses {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+}
+
+.heading {
+  width: 272px;
+}
+
+.textOrdersReady {
+  color: #00CCCC;
+}
+
+.textOrdersPending {
+  color: #FFF;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 153px;
+  height: 100%;
+  flex-wrap: wrap;
+}
