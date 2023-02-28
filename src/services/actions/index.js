@@ -471,6 +471,7 @@ export function requestNewToken(refreshToken, requestAgain) {
     }).then(res => {
         let authToken = res.accessToken.split('Bearer ')[1];
         let refreshToken = res.refreshToken;
+
         if (authToken) {
           setCookie('token', authToken);
         }

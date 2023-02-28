@@ -117,9 +117,9 @@ const FeedPage = () => {
         </>
       )}
 
-      {!location.state?.feedPage && !location.state?.modalOpen && <OrderContents/>}
+      {!location.state?.feedPage && !location.state?.modalOpen && location.pathname !== "/feed" && <OrderContents/>}
 
-      {location.state?.feedPage && data && (
+      {(location.state?.feedPage || location.pathname === "/feed") && data && (
           <div className={FeedStyles.container}>
             <FeedScroll data={data} ingredients={ingredients}/>
             <OrderStatuses stats={stats} data={data}/>

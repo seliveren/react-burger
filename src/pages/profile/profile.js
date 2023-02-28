@@ -6,7 +6,7 @@ import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import Modal from "../../components/modal/modal";
 import OrderContents from "../../components/order-contents/order-contents";
 import {FeedScroll} from "../../components/order-feed/order-feed";
-import {checkToken, closeOrderInfo, getIngredients} from "../../services/actions";
+import {checkToken, closeOrderInfo, getIngredients, getUser} from "../../services/actions";
 import {ordersHistoryUrl} from "../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useSocket} from "../../utils/socket";

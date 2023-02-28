@@ -431,6 +431,7 @@ export const requestNewTokenReducer = (state = userInfo, action) => {
 export const checkTokenReducer = (state = auth, action) => {
   switch (action.type) {
     case CHECK_TOKEN: {
+      console.log(!!getCookie('token'))
       return {
         ...state,
         isAuth: !!getCookie('token')

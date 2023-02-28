@@ -73,7 +73,7 @@ export const FeedCard = ({onClick, order}) => {
 
   return ( newArray.length !== 0 && bunInOrder !== undefined &&
     <div onClick={onClick} data-id={order.number}
-         className={(location.state?.ordersHistoryPage ? `${OrderFeedStyles.containerOrderHistory} pt-6 pb-6 pr-6 pl-6` : `${OrderFeedStyles.container} pt-6 pb-6 pr-6 pl-6`)}>
+         className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? `${OrderFeedStyles.containerOrderHistory} pt-6 pb-6 pr-6 pl-6` : `${OrderFeedStyles.container} pt-6 pb-6 pr-6 pl-6`)}>
       <div className={OrderFeedStyles.subcontainer}>
         <span className="text text_type_digits-default">
           {order.number}
@@ -83,10 +83,10 @@ export const FeedCard = ({onClick, order}) => {
         </span>
       </div>
       <h2
-        className={(location.state?.ordersHistoryPage ? `${OrderFeedStyles.heading} text text_type_main-medium pt-6 pb-2` : `${OrderFeedStyles.heading} text text_type_main-medium pt-6 pb-6`)}>
+        className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? `${OrderFeedStyles.heading} text text_type_main-medium pt-6 pb-2` : `${OrderFeedStyles.heading} text text_type_main-medium pt-6 pb-6`)}>
         {order.name}
       </h2>
-      {location.state?.ordersHistoryPage ?
+      {location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?
         <p className={order.status === 'done' ? `${OrderFeedStyles.statusDone} text text_type_main-default pb-6` : "text text_type_main-default pb-6"}>{statusRu(order.status)}</p> : null}
       <div className={OrderFeedStyles.subcontainer}>
         <div className={OrderFeedStyles.images}>
@@ -199,7 +199,7 @@ export const FeedScroll = ({data, ingredients}) => {
 
   return (
     <section className={OrderFeedStyles.section}>
-      {location.state?.feedPage || (location.state?.modalOpen && !location.state?.ordersHistoryPage) ? <h1 className="pb-1 text text_type_main-large">Лента заказов</h1> : null}
+      {(location.state?.feedPage || location.pathname === "/feed") || (location.state?.modalOpen && !location.state?.ordersHistoryPage) ? <h1 className="pb-1 text text_type_main-large">Лента заказов</h1> : null}
       <div
         className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?  `pr-4 ${OrderFeedStyles.structureOrderHistory} ${OrderFeedStyles.scrollbar}` : `pr-2 ${OrderFeedStyles.structure} ${OrderFeedStyles.scrollbar}`)}>
         <FeedCards data={data} onClick={handleOpen}/>

@@ -35,7 +35,7 @@ const AppHeader = () => {
             feedPage: true
           }}>
             <li className={`pr-20 pb-4 pt-4 ${headerStyles.li}`}>
-              {location.state?.feedPage ?
+              {location.state?.feedPage || location.pathname === "/feed" ?
                 <>
                   <ListIcon type="primary"/>
                   <span className={`text text_type_main-default ${headerStyles.link_active}`}>Лента заказов</span>
