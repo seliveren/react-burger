@@ -11,6 +11,7 @@ import {homeUrl, profileUrl, feedPageUrl} from "../../utils/constants";
 const AppHeader = () => {
 
   const location = useLocation();
+  const ingredient = JSON.parse(localStorage.getItem('ingredient'));
 
   return (
     <header>
@@ -20,7 +21,7 @@ const AppHeader = () => {
             homePage: true
           }}>
             <li className={`pl-30 pb-4 pt-4 ${headerStyles.li}`}>
-              {location.state?.homePage ?
+              {location.state?.homePage || !ingredient ?
                 <>
                   <BurgerIcon type="primary"/> <span
                   className={`text text_type_main-default ${headerStyles.link_active}`}>Конструктор</span>

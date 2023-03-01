@@ -40,6 +40,8 @@ const MainPage = () => {
     });
   };
 
+  const ingredient = JSON.parse(localStorage.getItem('ingredient'));
+
   return (
     <DndProvider backend={HTML5Backend}>
       {data.ingredientsRequest &&
@@ -51,7 +53,7 @@ const MainPage = () => {
         <>
           <main className={AppStyles.main}>
 
-            {!location.state?.homePage && !location.state?.modalOpen && <IngredientDetailsPage/>}
+            {!location.state?.homePage && !location.state?.modalOpen && ingredient && <IngredientDetailsPage/>}
 
             {location.state?.modalOpen && (
               <>
@@ -64,7 +66,7 @@ const MainPage = () => {
               </>
             )}
 
-            {location.state?.homePage && (
+            {(location.state?.homePage || !ingredient) && (
               <>
                 <BurgerIngredients/>
                 <BurgerConstructor/>
