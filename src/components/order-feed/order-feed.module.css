@@ -15,29 +15,7 @@
   justify-content: space-between;
 }
 
-.images {
-  position: relative;
-}
-
-.imageLast {
-  height: 56px;
-  width: 112px;
-  filter: brightness(60%);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-
-.heading {
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.imgInitial {
+.circleInitial {
   height: 64px;
   width: 64px;
   border-radius: 50%;
@@ -50,6 +28,43 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 6;
+}
+
+.circleLast {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  border: double 2px transparent;
+  background-image: linear-gradient(#1C1C21, #1C1C21), linear-gradient(63.18deg, #801AB3, #4C4CFF);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  filter: brightness(60%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.circle {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  border: double 2px transparent;
+  background-image: linear-gradient(#1C1C21, #1C1C21), linear-gradient(63.18deg, #801AB3, #4C4CFF);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.heading {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .imageInitial {
@@ -71,25 +86,40 @@
   transform: translate(-50%, -50%);
 }
 
+.images {
+  position: relative;
+}
 
-
-.img {
-  height: 64px;
-  width: 64px;
-  border-radius: 50%;
-  border: double 2px transparent;
-  background-image: linear-gradient(#1C1C21, #1C1C21), linear-gradient(63.18deg, #801AB3, #4C4CFF);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
+.imageLast {
+  height: 56px;
+  width: 112px;
+  filter: brightness(60%);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
+.subDiv {
+  position: relative;
+  height: 64px;
+  width: 64px;
+}
 
+.subDivLast {
+  position: relative;
+  height: 64px;
+  width: 64px;
+  z-index: 1;
+}
 
-
+.subDivInitial {
+  position: relative;
+  height: 64px;
+  width: 64px;
+  z-index: 1;
+}
 
 .div:nth-child(2) {
   z-index: 5;
@@ -116,42 +146,6 @@
   left: -79px;
 }
 
-.help {
-  position: relative;
-  height: 64px;
-  width: 64px;
-}
-
-.helpLast {
-  position: relative;
-  height: 64px;
-  width: 64px;
-  z-index: 1;
-}
-
-.helpInitial {
-  position: relative;
-  height: 64px;
-  width: 64px;
-  z-index: 1;
-}
-
-.imgLast {
-  height: 64px;
-  width: 64px;
-  border-radius: 50%;
-  border: double 2px transparent;
-  background-image: linear-gradient(#1C1C21, #1C1C21), linear-gradient(63.18deg, #801AB3, #4C4CFF);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  filter: brightness(60%);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-
 .div {
   position: relative;
   height: 64px;
@@ -160,7 +154,6 @@
   display: inline-block;
   z-index: 2;
 }
-
 
 .divLast {
   position: relative;

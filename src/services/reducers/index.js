@@ -43,7 +43,11 @@ import {
   NEW_TOKEN_FAILED,
   CHECK_TOKEN,
   SHOW_ORDER_INFO,
-  CLOSE_ORDER_INFO
+  CLOSE_ORDER_INFO,
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_ERROR,
+  WS_CONNECTION_CLOSED,
+  WS_GET_DATA
 } from '../actions/index';
 import {getCookie} from "../../utils/util-functions";
 
@@ -106,6 +110,11 @@ const shownOrderState = {
   openedOrder: {}
 };
 
+const wsState = {
+  wsConnected: false,
+  data: [],
+  stats: {}
+};
 
 export const ingredientsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -431,7 +440,6 @@ export const requestNewTokenReducer = (state = userInfo, action) => {
 export const checkTokenReducer = (state = auth, action) => {
   switch (action.type) {
     case CHECK_TOKEN: {
-      console.log(!!getCookie('token'))
       return {
         ...state,
         isAuth: !!getCookie('token')
@@ -464,6 +472,37 @@ export const shownOrderReducer = (state = shownOrderState, action) => {
   }
 };
 
+
+export const wsReducer = (state = wsState, action) => {
+  switch (action.type) {
+    case WS_CONNECTION_SUCCESS:
+      return {
+        ...state,
+        wsConnected: true
+      };
+
+    case WS_CONNECTION_ERROR:
+      return {
+        ...state,
+        wsConnected: false
+      };
+
+    case WS_CONNECTION_CLOSED:
+      return {
+        ...state,
+        wsConnected: false
+      };
+
+    case WS_GET_DATA:
+      return {
+        data: action.payload.orders.reverse(), stats: action.payload
+      };
+
+    default:
+      return state;
+  }
+};
+
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   order: orderReducer,
@@ -479,5 +518,6 @@ export const rootReducer = combineReducers({
   logoutUser: logoutUserReducer,
   newToken: requestNewTokenReducer,
   auth: checkTokenReducer,
-  shownOrder: shownOrderReducer
+  shownOrder: shownOrderReducer,
+  ws: wsReducer
 });

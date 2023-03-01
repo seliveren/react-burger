@@ -6,7 +6,6 @@
   gap: 16px;
 }
 
-
 .circle {
   height: 64px;
   width: 64px;
@@ -22,14 +21,13 @@
   z-index: 6;
 }
 
-.div {
+.divCircle {
   position: relative;
   height: 64px;
   width: 64px;
   margin: 0;
   display: inline-block;
 }
-
 
 .image {
   height: 56px;

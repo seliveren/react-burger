@@ -24,7 +24,6 @@ const MainPage = () => {
     dispatch(checkToken());
   }, [dispatch]);
 
-
   React.useEffect(
     () => {
       dispatch(getIngredients());

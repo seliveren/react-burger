@@ -9,7 +9,6 @@ import ProfilePage from "../../pages/profile/profile";
 import {ProtectedRouteElementAuth} from "../protected-route-element-auth/protected-route-element-auth";
 import {ProtectedRouteElementUnauth} from "../protected-route-element-unauth/protected-route-element-unauth";
 import {ProtectedRouteElementReset} from "../protected-route-element-reset/protected-route-element-reset";
-import OrdersHistoryPage from "../../pages/orders-history/orders-history";
 import IngredientDetailsPage from "../../pages/ingredient-details/ingredient-details";
 import React from "react";
 import Error404Page from "../../pages/error-404/error-404";
@@ -22,16 +21,23 @@ import {
   forgotPasswordUrl,
   resetPasswordUrl,
   profileUrl,
-  ordersHistoryUrl,
   anyUrl,
+  ordersHistoryUrl,
   feedPageUrl
 } from "../../utils/constants";
 import OrderContentsPage from "../../pages/order-contents/order-contents";
 
 
 export default function App() {
+
   const location = useLocation();
-  console.log(location)
+  localStorage.setItem('location.pathname', location.pathname);
+
+  if (location.state?.modalOpen) {
+    localStorage.setItem('location.state.modalOpen', "true");
+  } else {
+    localStorage.setItem('location.state.modalOpen', "false");
+  }
 
   return (
     <>
@@ -46,7 +52,7 @@ export default function App() {
         <Route path={resetPasswordUrl} element={<ProtectedRouteElementReset element={<ResetPasswordPage/>}/>}/>
 
         <Route path={profileUrl} element={<ProtectedRouteElementUnauth element={<ProfilePage/>}/>}>
-          <Route path={ordersHistoryUrl} element={<ProtectedRouteElementUnauth element={<OrdersHistoryPage/>}/>}>
+          <Route path={ordersHistoryUrl} element={<ProtectedRouteElementUnauth element={<OrderContentsPage/>}/>}>
             <Route path={`:id`} element={<ProtectedRouteElementUnauth element={<OrderContentsPage/>}/>}/>
           </Route>
         </Route>

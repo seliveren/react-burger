@@ -1,5 +1,6 @@
 import OrderStatusesStyles from "./order-statuses.module.css";
 import React from "react";
+import PropTypes from "prop-types";
 
 export const OrderStatuses = ({data, stats}) => {
 
@@ -12,7 +13,8 @@ export const OrderStatuses = ({data, stats}) => {
             {data.map((el, index) => {
               if (el.status === 'done' && index < 10) {
                 return <span
-                  className={`${OrderStatusesStyles.textOrdersReady} text text_type_digits-default`} key={index}>{el.number}</span>
+                  className={`${OrderStatusesStyles.textOrdersReady} text text_type_digits-default`}
+                  key={index}>{el.number}</span>
               }
             })}
           </div>
@@ -23,7 +25,8 @@ export const OrderStatuses = ({data, stats}) => {
             {data.map((el, index) => {
               if (el.status === 'pending' && index < 10) {
                 return <span
-                  className={`${OrderStatusesStyles.textOrdersPending} text text_type_digits-default`} key={index}>{el.number}</span>
+                  className={`${OrderStatusesStyles.textOrdersPending} text text_type_digits-default`}
+                  key={index}>{el.number}</span>
               }
             })}
           </div>
@@ -36,3 +39,8 @@ export const OrderStatuses = ({data, stats}) => {
     </section>
   )
 }
+
+OrderStatuses.propTypes = {
+  data: PropTypes.array.isRequired,
+  stats: PropTypes.object.isRequired
+};

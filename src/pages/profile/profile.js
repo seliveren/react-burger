@@ -2,85 +2,54 @@ import React from "react";
 import ProfileMenu from "../../components/profile-menu/profile-menu";
 import ProfileForm from "../../components/profile-form/profile-form";
 import ProfileStyles from "./profile.module.css";
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Modal from "../../components/modal/modal";
 import OrderContents from "../../components/order-contents/order-contents";
 import {FeedScroll} from "../../components/order-feed/order-feed";
-import {checkToken, closeOrderInfo, getIngredients, getUser} from "../../services/actions";
+import {
+  checkToken,
+  closeOrderInfo,
+  getIngredients,
+  WS_CONNECTION_CLOSED,
+  WS_CONNECTION_START
+} from "../../services/actions";
 import {ordersHistoryUrl} from "../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {useSocket} from "../../utils/socket";
-import {getCookie} from "../../utils/util-functions";
 
 
 const ProfilePage = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-
 
   React.useEffect(() => {
     dispatch(checkToken());
   }, [dispatch]);
 
-
-
-  const [data, setData] = React.useState([]);
-
+  React.useEffect(
+    () => {
+      if (location.state?.ordersHistoryPage || location.pathname === "/profile/orders" || location.state?.modalOpen) {
+        dispatch(getIngredients());
+      }
+    },
+    [dispatch, location.state, location.pathname]
+  );
 
   React.useEffect(
     () => {
-      dispatch(getIngredients());
+      if (location.state?.ordersHistoryPage || location.pathname === "/profile/orders" || location.state?.modalOpen) {
+        dispatch({type: WS_CONNECTION_START});
+        return () => {
+          dispatch({type: WS_CONNECTION_CLOSED});
+        };
+      }
     },
-    [dispatch]
+    [dispatch, location.state, location.pathname]
   );
 
+  const data = useSelector(store => store.ws.data)
   const ingredients = useSelector(store => store.ingredients.ingredients);
-
-  const pushMessage = React.useCallback(
-    message => {
-      setData(message);
-    },
-
-    [data]
-  );
-
-
-  const processEvent = React.useCallback(
-    event => {
-      const normalizedMessage = JSON.parse(event.data);
-      if (normalizedMessage.success === true) {
-
-        const a = normalizedMessage['orders'].reverse();
-
-        pushMessage(
-          a
-        );
-      }
-    },
-    [pushMessage]
-  );
-
-
-  const { connect } = useSocket('wss://norma.nomoreparties.space/orders', {
-    onMessage: processEvent
-
-  });
-
-
-
-  React.useEffect(
-    () => {
-      if (getCookie('token')) {
-        connect(getCookie('token'));
-      }
-    },
-    [getCookie('token')]
-  );
-
-
-
 
   const handleClose = () => {
     dispatch(closeOrderInfo());
@@ -92,20 +61,19 @@ const ProfilePage = () => {
     });
   };
 
-
-
   return (
     <>
       {!location.state?.modalOpen && (location.pathname === "/profile/orders" || location.pathname === "/profile") && (
-      <div className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? ProfileStyles.container : ProfileStyles.containerProfile)}>
-        <ProfileMenu/>
-        {location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?
-          <FeedScroll data={data} ingredients={ingredients}/>
-        : <ProfileForm/>}
-      </div>)}
+        <div
+          className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? ProfileStyles.container : ProfileStyles.containerProfile)}>
+          <ProfileMenu/>
+          {location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?
+            <FeedScroll data={data} ingredients={ingredients}/>
+            : <ProfileForm/>}
+        </div>)}
 
-      {!location.state?.ordersHistoryPage && !location.state?.profilePage && !location.state?.modalOpen && location.pathname !== "/profile/orders" && location.pathname !== "/profile" && <OrderContents/>}
-
+      {!location.state?.ordersHistoryPage && !location.state?.profilePage && !location.state?.modalOpen && location.pathname !== "/profile/orders" && location.pathname !== "/profile" &&
+        <OrderContents/>}
 
       {location.state?.modalOpen && (
         <>
@@ -114,8 +82,8 @@ const ProfilePage = () => {
           </Modal>
 
           <div className={ProfileStyles.container}>
-          <ProfileMenu/>
-          <FeedScroll data={data} ingredients={ingredients}/>
+            <ProfileMenu/>
+            <FeedScroll data={data} ingredients={ingredients}/>
           </div>
         </>
       )}

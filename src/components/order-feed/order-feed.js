@@ -7,6 +7,7 @@ import BurgerIngredientsStyles from "../burger-ingredients/burger-ingredients.mo
 import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidv4} from 'uuid';
 import {showOrderInfo} from "../../services/actions";
+import PropTypes from "prop-types";
 
 export const FeedCard = ({onClick, order}) => {
 
@@ -27,9 +28,7 @@ export const FeedCard = ({onClick, order}) => {
     return <FormattedDate date={new Date(dateFromServer)}/>
   }
 
-
   const ingredientsInOrder = ingredients.filter(el => ingredientsInOrderIDs.includes(el._id));
-
   const bunInOrder = ingredientsInOrder.find(el => el.type === 'bun')
   const otherIngredientsInOrder = ingredientsInOrder.filter(el => el.type !== 'bun')
 
@@ -42,13 +41,11 @@ export const FeedCard = ({onClick, order}) => {
   const price = () => {
 
     const bunPrice = bunInOrder.price * 2;
-
     const ingredientsPrice = otherIngredientsInOrder.reduce(
       (accumulator, currentValue) =>
         accumulator + currentValue.price * getNumberOfOccurrence(ingredientsInOrderIDs, currentValue._id),
       0
     );
-
     return bunPrice + ingredientsPrice
   }
 
@@ -67,11 +64,9 @@ export const FeedCard = ({onClick, order}) => {
     }
   }
 
-
-
   const numberOnImg = ingredientsInOrderIDs.length - 5
 
-  return ( newArray.length !== 0 && bunInOrder !== undefined &&
+  return (newArray.length !== 0 && bunInOrder !== undefined &&
     <div onClick={onClick} data-id={order.number}
          className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? `${OrderFeedStyles.containerOrderHistory} pt-6 pb-6 pr-6 pl-6` : `${OrderFeedStyles.container} pt-6 pb-6 pr-6 pl-6`)}>
       <div className={OrderFeedStyles.subcontainer}>
@@ -87,43 +82,48 @@ export const FeedCard = ({onClick, order}) => {
         {order.name}
       </h2>
       {location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?
-        <p className={order.status === 'done' ? `${OrderFeedStyles.statusDone} text text_type_main-default pb-6` : "text text_type_main-default pb-6"}>{statusRu(order.status)}</p> : null}
+        <p
+          className={order.status === 'done' ? `${OrderFeedStyles.statusDone} text text_type_main-default pb-6` : "text text_type_main-default pb-6"}>{statusRu(order.status)}</p> : null}
       <div className={OrderFeedStyles.subcontainer}>
         <div className={OrderFeedStyles.images}>
           {1 + newArray.length <= 6 ?
             <>
-            <div className={OrderFeedStyles.divInitial} key={uuidv4()}>
-              <div className={OrderFeedStyles.helpInitial}>
-                <div className={OrderFeedStyles.imgInitial}></div>
-                <img className={OrderFeedStyles.imageInitial} src={bunInOrder.image} alt={bunInOrder.name}/>
+              <div className={OrderFeedStyles.divInitial} key={uuidv4()}>
+                <div className={OrderFeedStyles.subDivInitial}>
+                  <div className={OrderFeedStyles.circleInitial}></div>
+                  <img className={OrderFeedStyles.imageInitial} src={bunInOrder.image} alt={bunInOrder.name}/>
+                </div>
               </div>
-            </div>
               {newArray.map(el => {
-                return  <div className={OrderFeedStyles.div} key={uuidv4()}><div className={OrderFeedStyles.help}>
-                  <div className={OrderFeedStyles.img}></div>
-                  <img className={OrderFeedStyles.image} src={el.image} alt={el.name}/>
-                </div></div>
+                return <div className={OrderFeedStyles.div} key={uuidv4()}>
+                  <div className={OrderFeedStyles.subDiv}>
+                    <div className={OrderFeedStyles.circle}></div>
+                    <img className={OrderFeedStyles.image} src={el.image} alt={el.name}/>
+                  </div>
+                </div>
               })}
             </>
             :
             <>
               <div className={OrderFeedStyles.divInitial} key={uuidv4()}>
-                <div className={OrderFeedStyles.helpInitial}>
-                  <div className={OrderFeedStyles.imgInitial}></div>
+                <div className={OrderFeedStyles.subDivInitial}>
+                  <div className={OrderFeedStyles.circleInitial}></div>
                   <img className={OrderFeedStyles.imageInitial} src={bunInOrder.image} alt={bunInOrder.name}/>
                 </div>
               </div>
               {
                 newArray.map((el, index) => {
                   if (index < 4) {
-                    return <div className={OrderFeedStyles.div} key={uuidv4()}><div className={OrderFeedStyles.help}>
-                      <div className={OrderFeedStyles.img}></div>
-                      <img className={OrderFeedStyles.image} src={el.image} alt={el.name}/></div></div>
+                    return <div className={OrderFeedStyles.div} key={uuidv4()}>
+                      <div className={OrderFeedStyles.subDiv}>
+                        <div className={OrderFeedStyles.circle}></div>
+                        <img className={OrderFeedStyles.image} src={el.image} alt={el.name}/></div>
+                    </div>
                   } else if (index === 5) {
                     return (
                       <div className={OrderFeedStyles.divLast} key={uuidv4()}>
-                        <div className={OrderFeedStyles.helpLast}>
-                          <div className={OrderFeedStyles.imgLast}></div>
+                        <div className={OrderFeedStyles.subDivLast}>
+                          <div className={OrderFeedStyles.circleLast}></div>
                           <img className={OrderFeedStyles.imageLast} src={el.image} alt={el.name}/>
                         </div>
                         <span
@@ -145,41 +145,41 @@ export const FeedCard = ({onClick, order}) => {
   )
 }
 
+FeedCard.propTypes = {
+  order: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 const FeedCards = ({data, onClick}) => {
-
 
   return (
     <>
       {data && data.map((order) => (
-        <FeedCard order={order} className={BurgerIngredientsStyles.card} key={uuidv4()}
-                  onClick={onClick}/>
+        <FeedCard order={order} className={BurgerIngredientsStyles.card} key={uuidv4()} onClick={onClick}/>
       ))}
     </>
   );
 };
 
+FeedCards.propTypes = {
+  data: PropTypes.array.isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 export const FeedScroll = ({data, ingredients}) => {
+
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-
   const handleOpen = (e) => {
+
     const currentOrder = data.find(el => el.number === Number(e.currentTarget.dataset.id));
-
     localStorage.setItem('order', JSON.stringify(currentOrder));
-
-
-
-   localStorage.setItem('data', JSON.stringify(ingredients));
-
-
-
+    localStorage.setItem('data', JSON.stringify(ingredients));
 
     dispatch(showOrderInfo(currentOrder));
-    if (location.state?.feedPage) {
+    if (location.state?.feedPage && ingredients !== undefined) {
       navigate(`${feedPageUrl}/${currentOrder.number}`, {
         state: {
           modalOpen: true
@@ -194,16 +194,21 @@ export const FeedScroll = ({data, ingredients}) => {
       });
     }
 
-
-};
+  };
 
   return (
     <section className={OrderFeedStyles.section}>
-      {(location.state?.feedPage || location.pathname === "/feed") || (location.state?.modalOpen && !location.state?.ordersHistoryPage) ? <h1 className="pb-1 text text_type_main-large">Лента заказов</h1> : null}
+      {(location.state?.feedPage || location.pathname === "/feed") || (location.state?.modalOpen && !location.state?.ordersHistoryPage) ?
+        <h1 className="pb-1 text text_type_main-large">Лента заказов</h1> : null}
       <div
-        className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ?  `pr-4 ${OrderFeedStyles.structureOrderHistory} ${OrderFeedStyles.scrollbar}` : `pr-2 ${OrderFeedStyles.structure} ${OrderFeedStyles.scrollbar}`)}>
+        className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? `pr-4 ${OrderFeedStyles.structureOrderHistory} ${OrderFeedStyles.scrollbar}` : `pr-2 ${OrderFeedStyles.structure} ${OrderFeedStyles.scrollbar}`)}>
         <FeedCards data={data} onClick={handleOpen}/>
       </div>
     </section>
   )
 }
+
+FeedScroll.propTypes = {
+  data: PropTypes.array.isRequired,
+  ingredients: PropTypes.array.isRequired
+};
