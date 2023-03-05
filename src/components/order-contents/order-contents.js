@@ -1,8 +1,11 @@
 import React from "react";
 import OrderContentsStyles from "./order-contents.module.css";
 import {CurrencyIcon, FormattedDate} from "@ya.praktikum/react-developer-burger-ui-components";
-import {v4 as uuidv4} from "uuid";
 import PropTypes from "prop-types";
+import {useDispatch, useSelector} from "react-redux";
+import {useLocation} from "react-router-dom";
+import {checkToken, WS_CONNECTION_CLOSED, WS_CONNECTION_START} from "../../services/actions";
+import {getCookie} from "../../utils/util-functions";
 
 
 const OrderCard = ({ingredient, number}) => {
@@ -28,10 +31,11 @@ OrderCard.propTypes = {
   number: PropTypes.number.isRequired
 };
 
+
 const OrderCards = ({data}) => {
 
   const ingredientsIDs = data.ingredients;
-  const ingredients = JSON.parse(localStorage.getItem('data'));
+  const ingredients = useSelector(store => store.ingredients.ingredients);
 
   let newArray = [];
 
@@ -62,8 +66,8 @@ const OrderCards = ({data}) => {
 
   return (
     <>
-      {uniqueArray.map((el) => (
-        <OrderCard ingredient={el} number={getNumberOfOccurrence(newArray, el)} key={uuidv4()}/>
+      {uniqueArray.map((el, index) => (
+        <OrderCard ingredient={el} number={getNumberOfOccurrence(newArray, el)} key={index}/>
       ))}
     </>
   );
@@ -73,9 +77,38 @@ OrderCards.propTypes = {
   data: PropTypes.object.isRequired
 };
 
+
 const OrderContents = () => {
 
-  const order = JSON.parse(localStorage.getItem('order'));
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
+
+  const token = getCookie('token');
+
+  React.useEffect(
+    () => {
+      if (location.state?.ordersHistoryPage) {
+        dispatch({type: WS_CONNECTION_START, payload: `?token=${token}`});
+        return () => {
+          dispatch({type: WS_CONNECTION_CLOSED, payload: `?token=${token}`});
+        };
+      } else if (location.state?.feedPage) {
+        dispatch({type: WS_CONNECTION_START, payload: "/all"});
+        return () => {
+          dispatch({type: WS_CONNECTION_CLOSED, payload: "/all"});
+        };
+      }
+    },
+    [dispatch]
+  );
+
+  const orderNumber = location.state?.feedPage || (location.state === null && location.pathname.split('/')[1] === 'feed') ? location.pathname.split('/')[2] : location.pathname.split('/')[3];
+  const orders = useSelector(store => store.ws.data)
+  const order = orders.find(el => Number(el.number) === Number(orderNumber));
 
   const statusRu = (statusEng) => {
     if (statusEng === 'done')
@@ -90,9 +123,9 @@ const OrderContents = () => {
     return <FormattedDate date={new Date(dateFromServer)}/>
   }
 
-  const ingredients = JSON.parse(localStorage.getItem('data'));
+  const ingredients = useSelector(store => store.ingredients);
   const ingredientsIDs = order.ingredients;
-  const ingredientsInOrder = ingredients.filter(el => ingredientsIDs.includes(el._id));
+  const ingredientsInOrder = ingredients.ingredients.filter(el => ingredientsIDs.includes(el._id));
   const bunInOrder = ingredientsInOrder.find(el => el.type === 'bun')
   const otherIngredientsInOrder = ingredientsInOrder.filter(el => el.type !== 'bun')
 
@@ -113,6 +146,8 @@ const OrderContents = () => {
   }
 
   return (
+    ingredients.ingredients.length &&
+    orders.length &&
     <div className={`${OrderContentsStyles.container} pb-20`}>
       <h1 className={`${OrderContentsStyles.headingMain} text text_type_digits-default pb-10`}>#{order.number}</h1>
       <h2 className={`${OrderContentsStyles.headingName} text text_type_main-medium pb-3`}>{order.name}</h2>

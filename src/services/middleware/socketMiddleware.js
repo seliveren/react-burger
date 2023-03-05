@@ -1,26 +1,16 @@
-import {getCookie} from "../../utils/util-functions";
-
 export const socketMiddleware = (wsUrl, wsActions) => {
 
   return store => {
+
     let socket = null;
 
     return next => action => {
       const {dispatch, getState} = store;
       const {type, payload} = action;
       const {wsInit, onOpen, onClose, onError, onMessage} = wsActions;
-      const token = getCookie('token');
-      const urlOrders = '/orders';
-      const urlAll = '/orders/all';
-      const locationPathname = localStorage.getItem('location.pathname');
-      const locationStateModal = localStorage.getItem('location.state.modalOpen');
 
-      if ((type === wsInit && token && locationPathname === "/feed") || (type === wsInit && token &&locationStateModal === "true")) {
-        socket = new WebSocket(`${wsUrl}${urlAll}?token=${token}`);
-      }
-
-      if ((type === wsInit && token && locationPathname === "/profile/orders") || (type === wsInit && token && locationStateModal === "true")) {
-        socket = new WebSocket(`${wsUrl}${urlOrders}?token=${token}`);
+      if (type === wsInit) {
+        socket = new WebSocket(`${wsUrl}${payload}`);
       }
 
       if (socket) {

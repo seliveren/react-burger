@@ -2,6 +2,7 @@ import OrderStatusesStyles from "./order-statuses.module.css";
 import React from "react";
 import PropTypes from "prop-types";
 
+
 export const OrderStatuses = ({data, stats}) => {
 
   return (

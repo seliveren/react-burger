@@ -1,13 +1,20 @@
 import React from "react";
 import IngredientDetailsStyles from "./ingredient-details.module.css";
+import {useLocation} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 
 const IngredientDetails = () => {
 
-  const ingredient = JSON.parse(localStorage.getItem('ingredient'));
+  const location = useLocation();
+  const ingredientID = location.pathname.split('/')[2];
+  const ingredients = useSelector(store => store.ingredients)
+  const ingredient = ingredients.ingredients.find(el => el._id === ingredientID);
 
   return (
-    <div className={IngredientDetailsStyles.info}>
+    !ingredients.ingredientsRequest &&
+    !ingredients.ingredientsFailed &&
+    ingredients.ingredients.length && <div className={IngredientDetailsStyles.info}>
       <img src={ingredient.image} alt={ingredient.name} className={`pt-3 ${IngredientDetailsStyles.image}`}/>
       <p className={`pt-4 text text_type_main-medium ${IngredientDetailsStyles.name}`}>{ingredient.name}</p>
       <div className={`pb-15 pt-8 ${IngredientDetailsStyles.stats}`}>

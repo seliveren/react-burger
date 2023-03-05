@@ -18,7 +18,6 @@ const ProfileMenu = () => {
   return (
 
     <section className={ProfileMenuStyles.section}>
-
       <nav>
         <ul
           className={(location.state?.ordersHistoryPage || location.pathname === "/profile/orders" ? `${ProfileMenuStyles.listOrders} pb-20 pt-20` : `${ProfileMenuStyles.list} pb-20`)}>
@@ -46,7 +45,6 @@ const ProfileMenu = () => {
           можете
           изменить свои персональные данные
         </div>}
-
     </section>
 
   )

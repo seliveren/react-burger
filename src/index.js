@@ -7,14 +7,15 @@ import {Provider} from 'react-redux';
 import {BrowserRouter as Router, useLocation} from "react-router-dom";
 import thunk from 'redux-thunk';
 import {rootReducer} from './services/reducers';
-import { socketMiddleware } from './services/middleware/socketMiddleware';
+import {socketMiddleware} from './services/middleware/socketMiddleware';
 import {
   WS_CONNECTION_CLOSED,
   WS_CONNECTION_ERROR,
   WS_CONNECTION_START,
   WS_CONNECTION_SUCCESS,
   WS_GET_DATA
-} from './services/actions/index';
+} from './services/actions';
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -23,7 +24,7 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 
-const wsUrl = 'wss://norma.nomoreparties.space';
+const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
 const wsActions = {
   wsInit: WS_CONNECTION_START,

@@ -5,9 +5,7 @@ import RegistrationForm from "../../components/registration-form/registration-fo
 const RegistrationPage = () => {
 
   return (
-    <>
-      <RegistrationForm/>
-    </>
+    <RegistrationForm/>
   );
 
 }
