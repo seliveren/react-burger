@@ -236,8 +236,7 @@ const BurgerConstructor = () => {
 
       {orderData.orderCheckoutRequest &&
         <div className={BurgerConstructorStyles.orderLoadingMessage}>Формируем заказ...&#128125;</div>}
-      {!orderData.orderCheckoutRequest &&
-        !orderData.orderCheckoutFailed && isOpenOrder && (
+      {!orderData.orderCheckoutRequest && isOpenOrder && (
           <Modal onClose={() => {
             setIsOpenOrder(false)
           }}>

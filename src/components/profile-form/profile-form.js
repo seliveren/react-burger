@@ -18,7 +18,7 @@ const ProfileForm = () => {
     },
     [dispatch, user.email, user.name]);
 
-  const inputs = useForm(``)
+  const inputs = useForm({})
   const [change, setChange] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
 
@@ -40,17 +40,17 @@ const ProfileForm = () => {
   return (
     <section>
       <form onSubmit={onSubmit} className={ProfileFormStyles.form}>
-        <Input value={inputs.values.name} type="text" onIconClick={() => setDisabled(false)} icon="EditIcon"
+        <Input value={inputs.values.name || ''} type="text" onIconClick={() => setDisabled(false)} icon="EditIcon"
                name={'name'}
                placeholder="Имя" onChange={(e) => {
           inputs.handleChange(e);
           setChange(true)
         }} disabled={disabled}/>
-        <EmailInput value={inputs.values.email} name={'email'} placeholder="Логин" isIcon={true} onChange={(e) => {
+        <EmailInput value={inputs.values.email || ''} name={'email'} placeholder="Логин" isIcon={true} onChange={(e) => {
           inputs.handleChange(e);
           setChange(true)
         }}/>
-        <PasswordInput value={inputs.values.password} icon="EditIcon" name={'password'} placeholder="Пароль"
+        <PasswordInput value={inputs.values.password || ''} icon="EditIcon" name={'password'} placeholder="Пароль"
                        onChange={(e) => {
                          inputs.handleChange(e);
                          setChange(true)
