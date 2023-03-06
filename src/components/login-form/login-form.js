@@ -5,21 +5,23 @@ import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import {checkToken, requestAuth} from "../../services/actions";
 import {homeUrl, forgotPasswordUrl, registerUrl} from "../../utils/constants";
+import {useForm} from "../../hooks/useForm";
 
 
 const LoginForm = () => {
 
   const dispatch = useDispatch();
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const inputs = useForm({})
   const navigate = useNavigate();
+  const [change, setChange] = React.useState(false);
 
   React.useEffect(() => {
     dispatch(checkToken());
+    inputs.setValues({email: '', password: ''});
   }, [dispatch]);
 
   const onSubmit = (e) => {
-    dispatch(requestAuth(email, password, () => navigate(`${homeUrl}`, {state: {homePage: true}})));
+    dispatch(requestAuth(inputs.values.email, inputs.values.password, () => navigate(`${homeUrl}`, {state: {homePage: true}})));
     e.preventDefault();
   }
 
@@ -28,8 +30,14 @@ const LoginForm = () => {
 
       <h3 className={`${LoginStyles.heading} text text_type_main-medium pb-6`}>Вход</h3>
       <form className={LoginStyles.form} onSubmit={onSubmit}>
-        <EmailInput value={email} onChange={(e) => setEmail(e.target.value)}/>
-        <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)}/>
+        <EmailInput value={inputs.values.email || ''} name={'email'} onChange={(e) => {
+          inputs.handleChange(e);
+          setChange(true)
+        }}/>
+        <PasswordInput value={inputs.values.password || ''} name={'password'} onChange={(e) => {
+          inputs.handleChange(e);
+          setChange(true)
+        }}/>
         <Button htmlType="submit" extraClass={LoginStyles.button}>Войти</Button>
       </form>
 

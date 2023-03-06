@@ -17,7 +17,6 @@ import {
 import {useDrop, useDrag} from "react-dnd";
 import {v4 as uuidv4} from 'uuid';
 import {useNavigate} from 'react-router-dom';
-import {getCookie} from "../../utils/util-functions";
 import {loginUrl} from "../../utils/constants";
 import {checkToken} from "../../services/actions";
 
@@ -237,8 +236,7 @@ const BurgerConstructor = () => {
 
       {orderData.orderCheckoutRequest &&
         <div className={BurgerConstructorStyles.orderLoadingMessage}>Формируем заказ...&#128125;</div>}
-      {!orderData.orderCheckoutRequest &&
-        !orderData.orderCheckoutFailed && isOpenOrder && (
+      {!orderData.orderCheckoutRequest && isOpenOrder && (
           <Modal onClose={() => {
             setIsOpenOrder(false)
           }}>

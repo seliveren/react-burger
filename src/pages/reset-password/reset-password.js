@@ -5,9 +5,7 @@ import ResetPasswordForm from "../../components/reset-password-form/reset-passwo
 const ResetPasswordPage = () => {
 
   return (
-    <>
-      <ResetPasswordForm/>
-    </>
+    <ResetPasswordForm/>
   );
 
 }

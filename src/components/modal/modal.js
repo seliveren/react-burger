@@ -4,6 +4,7 @@ import {CloseIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import PortalReactDOM from 'react-dom'
 import PropTypes from "prop-types";
 import ModalOverlay from "../modal-overlay/modal-overlay";
+import {Outlet} from "react-router-dom";
 
 
 const modalRoot = document.getElementById('react-modules');
@@ -26,6 +27,7 @@ const Modal = ({children, header, onClose}) => {
   return PortalReactDOM.createPortal(
     <>
       <ModalOverlay onClick={onClose}/>
+      <Outlet/>
       <div className={modalStyles.popupContainer}>
         <div className={`pt-15 pr-10 pl-10 ${modalStyles.header}`}>
           <h3 className={`m-0 text text_type_main-large ${modalStyles.heading}`}>{header}</h3>

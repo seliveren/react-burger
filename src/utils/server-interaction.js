@@ -1,3 +1,5 @@
+import {baseUrl} from "./constants";
+
 function checkResponse(res) {
   if (res.ok) {
     return res.json();
@@ -5,6 +7,15 @@ function checkResponse(res) {
   return Promise.reject(`Ошибка ${res.status}`);
 }
 
-export function request(url, options) {
-  return fetch(url, options).then(checkResponse)
+function checkSuccess(res) {
+  if (res && res.success) {
+    return res;
+  }
+  return Promise.reject(`Ответ не success: ${res}`);
+}
+
+export function request(endpoint, options) {
+  return fetch(`${baseUrl}/${endpoint}`, options)
+    .then(checkResponse)
+    .then(checkSuccess);
 }

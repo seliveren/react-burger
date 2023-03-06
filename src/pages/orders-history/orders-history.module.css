@@ -1,9 +1,0 @@
-.container {
-  display: flex;
-  flex-direction: row;
-  gap: 60px;
-  position: absolute;
-  top: 37.9%;
-  left: 40.5%;
-  transform: translate(-50%, -50%);
-}

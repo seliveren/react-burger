@@ -1,0 +1,108 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 640px;
+  gap: 16px;
+}
+
+.circle {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  border: double 2px transparent;
+  background-image: linear-gradient(#1C1C21, #1C1C21), linear-gradient(63.18deg, #801AB3, #4C4CFF);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+}
+
+.divCircle {
+  position: relative;
+  height: 64px;
+  width: 64px;
+  margin: 0;
+  display: inline-block;
+}
+
+.image {
+  height: 56px;
+  width: 112px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+}
+
+.text {
+  max-width: 414px;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 652px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 225px;
+}
+
+.headingMain {
+  margin: 0;
+  align-self: center;
+}
+
+.headingName {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 20px;
+  height: 100%;
+}
+
+.headingContents {
+  margin: 0;
+}
+
+.status {
+  color: #00CCCC;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+}
+
+.additionalInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.scrollbar {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.scrollbar::-webkit-scrollbar {
+  background-color: #2F2F37;
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}

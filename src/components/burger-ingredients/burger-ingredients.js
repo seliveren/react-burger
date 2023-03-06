@@ -6,11 +6,12 @@ import {ingredientType} from "../../utils/types.js";
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentTab, showIngredientInfo, increaseCounter} from "../../services/actions";
 import {useDrag} from "react-dnd";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {ingredientsUrl} from "../../utils/constants";
 
 
 const Categories = ({refOne, refTwo, refThree}) => {
+
   const currentTab = useSelector(store => store.tab.currentTab);
   const dispatch = useDispatch();
 
@@ -142,18 +143,20 @@ Filling.propTypes = {
 };
 
 const BurgerIngredients = () => {
+
   const dispatch = useDispatch();
   const data = useSelector(store => store.ingredients);
   const currentTab = useSelector(store => store.tab.currentTab);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleShownIngredient = (e) => {
     const currentIngredient = data.ingredients.find(el => el._id === e.currentTarget.dataset.id);
     dispatch(showIngredientInfo(currentIngredient));
-    localStorage.setItem('ingredient', JSON.stringify(currentIngredient));
     navigate(`${ingredientsUrl}/${currentIngredient._id}`, {
       state: {
-        modalOpen: true
+        modalOpen: true,
+        background: location
       }
     });
   };

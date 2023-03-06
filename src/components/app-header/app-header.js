@@ -5,7 +5,7 @@ import {BurgerIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {ListIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {ProfileIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {NavLink, useLocation} from 'react-router-dom';
-import {homeUrl, profileUrl} from "../../utils/constants";
+import {homeUrl, profileUrl, feedPageUrl} from "../../utils/constants";
 
 
 const AppHeader = () => {
@@ -31,10 +31,21 @@ const AppHeader = () => {
                 </>}
             </li>
           </NavLink>
-          <li className={`pr-20 pb-4 pt-4 ${headerStyles.li}`}>
-            <ListIcon type="secondary"/>
-            <span className={`text text_type_main-default ${headerStyles.link}`}>Лента заказов</span>
-          </li>
+          <NavLink className={headerStyles.navlink} to={feedPageUrl} state={{
+            feedPage: true
+          }}>
+            <li className={`pr-20 pb-4 pt-4 ${headerStyles.li}`}>
+              {location.state?.feedPage || location.pathname === "/feed" ?
+                <>
+                  <ListIcon type="primary"/>
+                  <span className={`text text_type_main-default ${headerStyles.link_active}`}>Лента заказов</span>
+                </> :
+                <>
+                  <ListIcon type="secondary"/>
+                  <span className={`text text_type_main-default ${headerStyles.link}`}>Лента заказов</span>
+                </>}
+            </li>
+          </NavLink>
           <li className={`pr-30 mr-6 ml-2 ${headerStyles.li}`}>
             <Logo/>
           </li>
@@ -43,7 +54,7 @@ const AppHeader = () => {
             mainProfile: true
           }}>
             <li className={`pr-30 pl-30 pb-4 pt-4 ${headerStyles.li}`}>
-              {location.state?.profilePage ?
+              {location.state?.profilePage || location.state?.ordersHistoryPage ?
                 <>
                   <ProfileIcon type="primary"/>
                   <span className={`text text_type_main-default ${headerStyles.link_active}`}>Личный кабинет</span>
