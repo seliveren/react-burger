@@ -14,6 +14,7 @@ type TOrderCardProps = {
   number: number;
 };
 
+
 const OrderCard: React.FC<TOrderCardProps> = ({ingredient, number}) => {
 
   return (
