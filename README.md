@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-Приложение космической бургерной для создания заказов.
+Приложение космической бургерной для создания заказов.  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Ссылка на проект:
